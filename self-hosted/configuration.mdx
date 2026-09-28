@@ -1,0 +1,409 @@
+---
+title: 'Configure Your Self-Hosted Chatwoot Instance Settings'
+sidebarTitle: 'Configuration'
+description: 'Set environment variables to enable email delivery, cloud file storage, OAuth sign-in, social channel integrations, and more on your Chatwoot server.'
+---
+
+Chatwoot reads its configuration from a `.env` file in the application root directory. After changing any variable, restart your Chatwoot services for the new values to take effect. On a Linux installation, run `sudo systemctl restart chatwoot.target` (or `cwctl -r`). On Docker Compose, run `docker compose up -d` to recreate the containers.
+
+<Note>
+  A complete template with every variable set to an empty value ships with Chatwoot at `.env.example`. Copy it to `.env` and fill in the values you need — you do not have to define every variable, only the ones relevant to the features you want to enable.
+</Note>
+
+---
+
+## Core Settings
+
+These variables are required for any production deployment. Chatwoot will not function correctly without them.
+
+<ParamField body="FRONTEND_URL" type="string" required>
+  The public URL of your Chatwoot instance, including the scheme. Used to generate links in emails, webhooks, and the API.
+
+  ```bash
+  FRONTEND_URL=https://chat.yourdomain.com
+  ```
+</ParamField>
+
+<ParamField body="SECRET_KEY_BASE" type="string" required>
+  A long random string used to sign cookies and encrypted tokens. Generate one by running `rake secret` from the application root. Never share or reuse this value across installations.
+
+  ```bash
+  SECRET_KEY_BASE=your_long_random_secret_here
+  ```
+</ParamField>
+
+<ParamField body="RAILS_ENV" type="string" default="production">
+  The Rails environment. Always set this to `production` for self-hosted deployments.
+
+  ```bash
+  RAILS_ENV=production
+  ```
+</ParamField>
+
+<ParamField body="DEFAULT_LOCALE" type="string" default="en">
+  The default language for the Chatwoot interface. Accepts any locale code supported by Chatwoot (e.g., `en`, `pt_BR`, `de`, `fr`).
+
+  ```bash
+  DEFAULT_LOCALE=en
+  ```
+</ParamField>
+
+<ParamField body="ENABLE_ACCOUNT_SIGNUP" type="boolean" default="false">
+  When set to `true`, allows anyone to create a new account from the login page. Leave this `false` (the default) for private installations where you create accounts manually through the Super Admin console.
+
+  ```bash
+  ENABLE_ACCOUNT_SIGNUP=true
+  ```
+</ParamField>
+
+---
+
+## Database
+
+<ParamField body="DATABASE_URL" type="string">
+  Full PostgreSQL connection URI. Use this variable when connecting to a managed database service (RDS, Cloud SQL, DigitalOcean Managed Postgres, etc.).
+
+  ```bash
+  DATABASE_URL=postgresql://username:password@hostname:5432/chatwoot_production
+  ```
+</ParamField>
+
+<ParamField body="POSTGRES_HOST" type="string" default="localhost">
+  Hostname of the PostgreSQL server. Use this group of variables instead of `DATABASE_URL` when running Postgres locally or in a Docker Compose network.
+
+  ```bash
+  POSTGRES_HOST=localhost
+  POSTGRES_PORT=5432
+  POSTGRES_DATABASE=chatwoot_production
+  POSTGRES_USERNAME=chatwoot
+  POSTGRES_PASSWORD=your_db_password
+  ```
+</ParamField>
+
+<ParamField body="REDIS_URL" type="string" required>
+  Connection URL for the Redis server. Redis is required — it handles the background job queue and real-time messaging.
+
+  ```bash
+  REDIS_URL=redis://127.0.0.1:6379
+  ```
+</ParamField>
+
+<ParamField body="REDIS_PASSWORD" type="string">
+  Password for Redis authentication. Set this if your Redis instance requires a password.
+
+  ```bash
+  REDIS_PASSWORD=your_redis_password
+  ```
+</ParamField>
+
+---
+
+## Email Delivery
+
+Chatwoot sends transactional emails for agent invitations, password resets, and conversation notifications. Configure an SMTP provider to enable these.
+
+<ParamField body="MAILER_SENDER_EMAIL" type="string" required>
+  The From address used on all outgoing emails. Accepts a plain address or a formatted name.
+
+  ```bash
+  MAILER_SENDER_EMAIL=support@yourdomain.com
+  # or
+  MAILER_SENDER_EMAIL=Chatwoot <support@yourdomain.com>
+  ```
+</ParamField>
+
+<ParamField body="SMTP_ADDRESS" type="string">
+  Hostname of your SMTP server. If this variable is not set, Chatwoot defaults to a local Postfix installation.
+
+  ```bash
+  SMTP_ADDRESS=smtp.sendgrid.net
+  ```
+</ParamField>
+
+<ParamField body="SMTP_PORT" type="number" default="587">
+  SMTP port number. Common values are `587` (STARTTLS) and `465` (TLS).
+
+  ```bash
+  SMTP_PORT=587
+  ```
+</ParamField>
+
+<ParamField body="SMTP_USERNAME" type="string">
+  SMTP authentication username. For SendGrid, this is the literal string `apikey`.
+</ParamField>
+
+<ParamField body="SMTP_PASSWORD" type="string">
+  SMTP authentication password or API key.
+</ParamField>
+
+<ParamField body="SMTP_AUTHENTICATION" type="string" default="plain">
+  SMTP authentication method. Accepted values: `plain`, `login`, `cram_md5`.
+
+  ```bash
+  SMTP_AUTHENTICATION=plain
+  ```
+</ParamField>
+
+<ParamField body="SMTP_ENABLE_STARTTLS_AUTO" type="boolean" default="true">
+  Enable STARTTLS upgrade for the SMTP connection. Set to `true` for most cloud providers.
+
+  ```bash
+  SMTP_ENABLE_STARTTLS_AUTO=true
+  ```
+</ParamField>
+
+<ParamField body="SMTP_TLS" type="boolean">
+  Use implicit TLS (port 465). Set to `true` only when your provider requires a direct TLS connection rather than STARTTLS.
+</ParamField>
+
+### SMTP Provider Examples
+
+<Tabs>
+  <Tab title="SendGrid">
+    ```bash
+    SMTP_ADDRESS=smtp.sendgrid.net
+    SMTP_AUTHENTICATION=plain
+    SMTP_DOMAIN=yourdomain.com
+    SMTP_ENABLE_STARTTLS_AUTO=true
+    SMTP_PORT=587
+    SMTP_USERNAME=apikey
+    SMTP_PASSWORD=your_sendgrid_api_key
+    ```
+  </Tab>
+  <Tab title="Amazon SES">
+    ```bash
+    SMTP_ADDRESS=email-smtp.us-east-1.amazonaws.com
+    SMTP_AUTHENTICATION=plain
+    SMTP_ENABLE_STARTTLS_AUTO=true
+    SMTP_USERNAME=your_ses_smtp_username
+    SMTP_PASSWORD=your_ses_smtp_password
+    ```
+  </Tab>
+  <Tab title="Mailgun">
+    ```bash
+    SMTP_ADDRESS=smtp.mailgun.org
+    SMTP_AUTHENTICATION=plain
+    SMTP_DOMAIN=yourdomain.com
+    SMTP_ENABLE_STARTTLS_AUTO=true
+    SMTP_PORT=587
+    SMTP_USERNAME=your_mailgun_smtp_username
+    SMTP_PASSWORD=your_mailgun_smtp_password
+    ```
+  </Tab>
+  <Tab title="Mandrill (Mailchimp)">
+    ```bash
+    SMTP_ADDRESS=smtp.mandrillapp.com
+    SMTP_AUTHENTICATION=plain
+    SMTP_DOMAIN=yourdomain.com
+    SMTP_ENABLE_STARTTLS_AUTO=true
+    SMTP_PORT=587
+    SMTP_USERNAME=your_mandrill_smtp_username
+    SMTP_PASSWORD=any_valid_mandrill_api_key
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## File Storage
+
+By default, Chatwoot stores uploaded attachments on local disk under the `/storage` directory. For production deployments, configure a cloud storage provider to ensure attachments survive server restarts and are reliably backed up.
+
+<ParamField body="ACTIVE_STORAGE_SERVICE" type="string" default="local">
+  Selects the storage backend. Accepted values: `local`, `amazon`, `google`, `microsoft`, `s3_compatible`.
+
+  ```bash
+  ACTIVE_STORAGE_SERVICE=amazon
+  ```
+</ParamField>
+
+<ParamField body="DIRECT_UPLOADS_ENABLED" type="boolean" default="false">
+  When `true`, file uploads go directly from the browser to your cloud storage bucket, bypassing the Chatwoot application server. Reduces server load for large file uploads. Requires CORS to be configured on your storage bucket.
+
+  ```bash
+  DIRECT_UPLOADS_ENABLED=true
+  ```
+</ParamField>
+
+### Amazon S3
+
+<ParamField body="S3_BUCKET_NAME" type="string">
+  Name of your S3 bucket.
+</ParamField>
+
+<ParamField body="AWS_ACCESS_KEY_ID" type="string">
+  Access key ID for an IAM user with `s3:GetObject`, `s3:PutObject`, `s3:DeleteObject`, and `s3:ListBucket` permissions on the bucket.
+</ParamField>
+
+<ParamField body="AWS_SECRET_ACCESS_KEY" type="string">
+  Secret access key for the IAM user above.
+</ParamField>
+
+<ParamField body="AWS_REGION" type="string">
+  AWS region where your bucket is located (e.g., `us-east-1`).
+
+  ```bash
+  ACTIVE_STORAGE_SERVICE=amazon
+  S3_BUCKET_NAME=my-chatwoot-bucket
+  AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+  AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  AWS_REGION=us-east-1
+  ```
+</ParamField>
+
+### Google Cloud Storage
+
+<ParamField body="GCS_PROJECT" type="string">
+  Your Google Cloud project ID.
+</ParamField>
+
+<ParamField body="GCS_BUCKET" type="string">
+  Name of the GCS bucket.
+</ParamField>
+
+<ParamField body="GCS_CREDENTIALS" type="string">
+  Service account credentials as a single-line JSON string. Remove all newlines before pasting into `.env`. Wrap the value in single quotes.
+
+  ```bash
+  ACTIVE_STORAGE_SERVICE=google
+  GCS_PROJECT=my-gcp-project
+  GCS_BUCKET=my-chatwoot-bucket
+  GCS_CREDENTIALS='{"type":"service_account","project_id":"...","private_key":"...","client_email":"..."}'
+  ```
+</ParamField>
+
+### Microsoft Azure Blob Storage
+
+<ParamField body="AZURE_STORAGE_ACCOUNT_NAME" type="string">
+  Your Azure storage account name.
+</ParamField>
+
+<ParamField body="AZURE_STORAGE_ACCESS_KEY" type="string">
+  Access key for the Azure storage account.
+</ParamField>
+
+<ParamField body="AZURE_STORAGE_CONTAINER" type="string">
+  Name of the Azure Blob container to use.
+
+  ```bash
+  ACTIVE_STORAGE_SERVICE=microsoft
+  AZURE_STORAGE_ACCOUNT_NAME=mystorageaccount
+  AZURE_STORAGE_ACCESS_KEY=your_azure_access_key
+  AZURE_STORAGE_CONTAINER=chatwoot-uploads
+  ```
+</ParamField>
+
+### S3-Compatible Services (MinIO, DigitalOcean Spaces, Linode)
+
+<ParamField body="STORAGE_BUCKET_NAME" type="string">
+  Name of the bucket on the S3-compatible service.
+</ParamField>
+
+<ParamField body="STORAGE_ACCESS_KEY_ID" type="string">
+  Access key for the S3-compatible service.
+</ParamField>
+
+<ParamField body="STORAGE_SECRET_ACCESS_KEY" type="string">
+  Secret key for the S3-compatible service.
+</ParamField>
+
+<ParamField body="STORAGE_REGION" type="string">
+  Region identifier for the endpoint (e.g., `nyc3` for DigitalOcean Spaces New York).
+</ParamField>
+
+<ParamField body="STORAGE_ENDPOINT" type="string">
+  Full endpoint URL for the S3-compatible service.
+
+  ```bash
+  ACTIVE_STORAGE_SERVICE=s3_compatible
+  STORAGE_BUCKET_NAME=my-chatwoot-bucket
+  STORAGE_ACCESS_KEY_ID=your_access_key
+  STORAGE_SECRET_ACCESS_KEY=your_secret_key
+  STORAGE_REGION=nyc3
+  STORAGE_ENDPOINT=https://nyc3.digitaloceanspaces.com
+  # For MinIO with path-style access:
+  # STORAGE_FORCE_PATH_STYLE=true
+  ```
+</ParamField>
+
+---
+
+## Social Channel Integrations
+
+To connect Facebook, Instagram, or Twitter inboxes in Chatwoot, you need to register a developer application with each platform and supply the credentials below.
+
+### Facebook & Instagram
+
+<ParamField body="FB_APP_ID" type="string">
+  The App ID from your Facebook Developer application. Required for Facebook and Instagram channel inboxes.
+</ParamField>
+
+<ParamField body="FB_APP_SECRET" type="string">
+  The App Secret from your Facebook Developer application.
+</ParamField>
+
+<ParamField body="FB_VERIFY_TOKEN" type="string">
+  A token you choose and configure in both Chatwoot and your Facebook App webhook settings. Used to verify webhook ownership.
+
+  ```bash
+  FB_APP_ID=123456789012345
+  FB_APP_SECRET=your_facebook_app_secret
+  FB_VERIFY_TOKEN=your_chosen_verify_token
+  ```
+</ParamField>
+
+---
+
+## Google OAuth (Agent Sign-In)
+
+Enable Google OAuth to let your support agents sign in to Chatwoot using their Google accounts instead of a username and password.
+
+<ParamField body="GOOGLE_OAUTH_CLIENT_ID" type="string">
+  Client ID from the Google API Console for your OAuth 2.0 credential.
+</ParamField>
+
+<ParamField body="GOOGLE_OAUTH_CLIENT_SECRET" type="string">
+  Client secret for the Google OAuth credential.
+</ParamField>
+
+<ParamField body="GOOGLE_OAUTH_CALLBACK_URL" type="string">
+  The authorized redirect URI registered in the Google API Console. Must follow the format below exactly.
+
+  ```bash
+  GOOGLE_OAUTH_CLIENT_ID=369777777777-xxxxxxxx.apps.googleusercontent.com
+  GOOGLE_OAUTH_CLIENT_SECRET=ABCDEF-GHijklmnoPqrstuvwX-yz1234567
+  GOOGLE_OAUTH_CALLBACK_URL=https://chat.yourdomain.com/omniauth/google_oauth2/callback
+  ```
+</ParamField>
+
+---
+
+## Telemetry
+
+<ParamField body="DISABLE_TELEMETRY" type="boolean" default="false">
+  Set to `true` to stop your installation from sending anonymized usage statistics to Chatwoot. No customer data is ever included in telemetry. See the [Overview](/self-hosted/overview#telemetry) for details on what is collected.
+
+  ```bash
+  DISABLE_TELEMETRY=true
+  ```
+</ParamField>
+
+---
+
+## Logging
+
+<ParamField body="LOG_LEVEL" type="string" default="info">
+  Controls the verbosity of application logs. Accepted values: `debug`, `info`, `warn`, `error`, `fatal`, `unknown`. Use `debug` temporarily when troubleshooting; do not leave it enabled in production as it produces very large log output.
+
+  ```bash
+  LOG_LEVEL=info
+  ```
+</ParamField>
+
+<ParamField body="LOG_SIZE" type="number" default="1024">
+  Maximum retained log size in megabytes before log rotation. Defaults to 1 GB.
+
+  ```bash
+  LOG_SIZE=1024
+  ```
+</ParamField>

@@ -1,0 +1,109 @@
+---
+title: 'Add Agents and Teams to Your Chatwoot Account'
+sidebarTitle: 'Agents & Teams'
+description: 'Invite support agents by email, assign Administrator or Agent roles, create teams, and manage membership to route conversations efficiently.'
+---
+
+Chatwoot organizes your support workforce into **agents** — the people who handle conversations — and **teams**, which are logical groups of agents built around shared responsibilities like Sales or Technical Support. This page walks you through inviting agents, choosing their roles, and wiring them into teams so conversations reach the right people automatically.
+
+## Agents
+
+### Invite an agent
+
+Navigate to **Settings → Agents**. Your own account is already listed there as an Administrator.
+
+<Steps>
+  <Step title="Open the Add Agent dialog">
+    Click the **Add Agent** button in the top-right corner of the Agents page. A modal window appears.
+  </Step>
+  <Step title="Fill in the agent details">
+    Complete the three fields in the modal:
+
+    | Field | Description |
+    |---|---|
+    | **Agent Name** | The agent's display name (e.g. *Don Pete*) |
+    | **Role** | Choose **Agent** or **Administrator** (see [roles](#agent-roles) below) |
+    | **Email Address** | The email address the invitation is sent to |
+  </Step>
+  <Step title="Confirm the invitation">
+    Click **Add Agent**. A success banner confirms the agent was added and they appear in your agents list immediately. Chatwoot sends them an invitation email to set up their password.
+  </Step>
+</Steps>
+
+<Tip>
+  You can also invite a team member directly from the Chatwoot home screen by clicking the **Click here to Invite Team Member** shortcut link beneath your inbox list.
+</Tip>
+
+### Agent roles
+
+Chatwoot has two roles. Choose carefully — roles determine what each person can access.
+
+<CardGroup cols={2}>
+  <Card title="Agent" icon="headset">
+    Can view and reply to conversations, access inbox views, and read reports. Cannot change account settings or manage other users.
+  </Card>
+  <Card title="Administrator" icon="shield-halved">
+    Has all Agent capabilities plus full access to Settings — including inboxes, agents, teams, integrations, and billing.
+  </Card>
+</CardGroup>
+
+### Edit or remove an agent
+
+- **Edit** — Click the pencil icon next to an agent's name to update their display name, role, or email address, then save.
+- **Remove** — Click the trash icon next to an agent's name to permanently remove them from your account. Their past conversations remain intact; they simply lose the ability to log in.
+
+<Warning>
+  Removing an agent does not automatically reassign their open conversations. Reassign or close those conversations before deleting the agent to avoid orphaned work.
+</Warning>
+
+---
+
+## Teams
+
+### What is a team?
+
+A team is a named group of agents. When you assign a conversation to a team, every agent in that team is notified and can work on it. Agents can belong to multiple teams simultaneously.
+
+### Create a team
+
+<Steps>
+  <Step title="Navigate to the Teams settings">
+    Go to **Settings → Teams**, then click **Create new team**.
+  </Step>
+  <Step title="Configure the team">
+    Fill in the team details:
+
+    | Field | Description |
+    |---|---|
+    | **Team Name** | A short, recognizable label (e.g. *Sales*, *Support*, *Billing*) |
+    | **Team Description** | A brief summary of the team's purpose |
+    | **Auto-assign conversations** | Enable this checkbox to automatically distribute incoming conversations to available agents in the team. Leave it unchecked if you prefer manual assignment. |
+  </Step>
+  <Step title="Create the team">
+    Click **Create Team** to proceed to the agent-selection step.
+  </Step>
+</Steps>
+
+### Add agents to a team
+
+After you create a team, Chatwoot immediately presents the agent selection screen.
+
+<Steps>
+  <Step title="Select agents">
+    Check the box next to each agent you want in this team. Only selected agents will see this team's conversations in their sidebar.
+  </Step>
+  <Step title="Confirm">
+    Click **Add Agents**, then click **Finish** on the confirmation screen.
+  </Step>
+</Steps>
+
+<Info>
+  Whenever a conversation is assigned to a team, all agents currently in that team receive a notification, regardless of whether auto-assignment is enabled.
+</Info>
+
+### Edit or delete a team
+
+Your team list under **Settings → Teams** shows every team with edit and delete controls:
+
+- **Edit** — Update the team name, description, auto-assignment setting, or member list at any time.
+- **Delete** — Removes the team permanently. Conversations previously assigned to that team are not deleted; they simply no longer carry a team assignment.

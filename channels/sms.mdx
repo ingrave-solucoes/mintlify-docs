@@ -1,0 +1,121 @@
+---
+title: 'Add SMS to Your Chatwoot Support Inbox'
+sidebarTitle: 'SMS'
+description: 'Connect an SMS inbox to Chatwoot using Twilio or Bandwidth — enter your credentials, add agents, and start sending and receiving text messages from your dashboard.'
+---
+
+Chatwoot supports SMS through two providers: **Twilio** and **Bandwidth**. Once connected, SMS conversations appear alongside all your other channel conversations in the Chatwoot dashboard. Your agents can send and receive text messages, assign conversations, add notes, and use all the same collaboration tools available on other channels. Choose the provider you already use — or the one that best serves your region and pricing requirements.
+
+## Option 1: Twilio SMS
+
+Twilio is the most widely used SMS provider. If you have an existing Twilio account with a verified phone number, you can connect it to Chatwoot in a few minutes.
+
+### What You Need
+
+Gather these credentials from your [Twilio Console](https://console.twilio.com) before starting:
+
+| Credential | Where to Find It |
+|---|---|
+| Phone Number | The verified Twilio SMS number you want to use |
+| Account SID | Shown on the Twilio Console home page |
+| Auth Token | Shown on the Twilio Console home page (click the eye icon to reveal) |
+
+### Steps
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **SMS** icon.
+  </Step>
+  <Step title="Choose Twilio as the provider">
+    Select **Twilio** from the API provider dropdown.
+  </Step>
+  <Step title="Enter your Twilio credentials">
+    Fill in the following fields:
+
+    | Field | Description |
+    |---|---|
+    | Channel Name | A display name for this inbox inside Chatwoot (e.g., `Support SMS`) |
+    | Phone Number | Your Twilio phone number, exactly as it appears in the Twilio dashboard |
+    | Account SID | Your Twilio Account SID |
+    | Auth Token | Your Twilio Auth Token |
+
+    Click **Create Twilio Channel** when done.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox so they can send and receive SMS messages from the dashboard.
+  </Step>
+</Steps>
+
+Your Twilio SMS inbox is ready. Incoming text messages to your Twilio number appear as new conversations in Chatwoot automatically — no additional webhook configuration is required for SMS (unlike WhatsApp via Twilio).
+
+### Using Twilio Studio with SMS
+
+If you use Twilio Studio to manage a custom conversation flow for SMS, do **not** update the webhook URL directly — this overwrites your Studio configuration. Instead, add an **HTTP Request** widget at the agent handoff step in your Studio flow:
+
+| Setting | Value |
+|---|---|
+| Request Method | `POST` |
+| Request URL | `https://app.chatwoot.com/twilio/callback` |
+| Content Type | `Application/JSON` |
+| Request Body | `{{trigger.message \| to_json}}` |
+
+This forwards the message to Chatwoot and opens a conversation for your agents. Ensure your Studio flow is also set up to handle outbound replies from agents.
+
+---
+
+## Option 2: Bandwidth SMS
+
+Bandwidth is a carrier-grade communications platform popular for high-volume SMS use cases and US-based phone numbers.
+
+### What You Need
+
+Gather the following from your [Bandwidth Dashboard](https://dashboard.bandwidth.com):
+
+- A provisioned Bandwidth phone number
+- Your Bandwidth application credentials (Account ID, API credentials)
+
+### Steps
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **SMS** icon.
+  </Step>
+  <Step title="Choose Bandwidth as the provider">
+    Select **Bandwidth** from the API provider dropdown.
+  </Step>
+  <Step title="Enter your Bandwidth credentials">
+    Fill in your inbox name, phone number, and the required Bandwidth API credentials shown in the setup form. Click **Create Bandwidth Channel** when complete.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox and click **Add Agents**.
+  </Step>
+</Steps>
+
+Your Bandwidth SMS inbox is ready. Incoming SMS messages start appearing as conversations in your Chatwoot dashboard.
+
+---
+
+## SMS Channel Capabilities
+
+Keep these limitations in mind when planning your SMS support workflow:
+
+| Feature | Details |
+|---|---|
+| Max message length | 160 characters per SMS segment |
+| Attachments | Not supported |
+| Channel greeting | Supported |
+| Agent auto-assignment | Supported |
+| CSAT surveys | Not supported |
+| Outgoing restrictions | None |
+
+<Tip>
+  Because SMS messages are limited to 160 characters, encourage your agents to use canned responses for common replies. Go to **Settings → Canned Responses** to create a library of short, ready-to-send messages.
+</Tip>
+
+## Additional Inbox Settings
+
+After creating your SMS inbox, click the **gear icon** next to it in **Settings → Inboxes** to configure:
+
+- **Greeting Message** — an automatic first message sent when a new conversation starts
+- **Business Hours** — define working hours and configure an offline message
+- **Collaborators** — add or remove agents and toggle automatic assignment

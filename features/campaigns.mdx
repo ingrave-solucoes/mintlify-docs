@@ -1,0 +1,120 @@
+---
+title: 'Send Proactive Campaigns to Your Customers'
+sidebarTitle: 'Campaigns'
+description: 'Create one-off SMS campaigns or ongoing live-chat campaigns in Chatwoot to proactively engage customers with targeted messages at the right moment.'
+---
+
+Chatwoot campaigns let you reach out to customers before they reach out to you. Instead of waiting for inbound conversations, you can send targeted messages to groups of contacts or automatically trigger messages when visitors spend time on a specific page of your website.
+
+## Types of Campaigns
+
+Chatwoot supports two distinct campaign types, each designed for a different channel and use case.
+
+<CardGroup cols={2}>
+  <Card title="One-Off Campaigns" icon="paper-plane">
+    Send a single SMS message to a group of contacts at a scheduled time. Ideal for announcements, promotions, or follow-ups.
+  </Card>
+  <Card title="Ongoing Campaigns" icon="rotate">
+    Automatically send a live-chat message to website visitors who stay on a specific page for a defined length of time. Ideal for proactive support and lead engagement.
+  </Card>
+</CardGroup>
+
+## One-Off Campaigns
+
+One-off campaigns send an SMS message to every contact that carries a specific label. You choose the content, the SMS inbox, the target audience, and the time the message goes out.
+
+### Creating a One-Off Campaign
+
+<Steps>
+  <Step title="Open the Campaigns section">
+    Click the **Campaigns** tab in the Chatwoot sidebar.
+  </Step>
+  <Step title="Create the campaign">
+    Click the **Create a campaign** button. A modal will appear where you enter the campaign details.
+  </Step>
+  <Step title="Fill in the campaign fields">
+    Complete each field in the form:
+
+    | Field | Description |
+    |---|---|
+    | **Title** | A name for the campaign (internal reference only). |
+    | **Message** | The SMS text your contacts will receive. |
+    | **Select Inbox** | Choose an SMS inbox to send the message from. |
+    | **Audience** | Select one or more contact labels. Chatwoot sends the campaign to every contact tagged with the selected label(s). |
+    | **Scheduled Time** | Set the date and time for the campaign to execute. |
+
+  </Step>
+  <Step title="Save the campaign">
+    Click **Create** to schedule the campaign. Chatwoot will dispatch the SMS to all matching contacts at the scheduled time.
+  </Step>
+</Steps>
+
+<Info>
+  Contact labels are managed from the **Contacts** section. Make sure your contacts are tagged before you create a campaign that targets a label.
+</Info>
+
+## Ongoing Campaigns
+
+Ongoing campaigns work with your website live-chat widget. When a visitor lands on a page you specify and remains there for a set number of seconds, Chatwoot automatically sends a message through the chat widget — appearing as if an agent reached out first.
+
+### Creating an Ongoing Campaign
+
+<Steps>
+  <Step title="Open the Campaigns section">
+    Click the **Campaigns** tab in the Chatwoot sidebar. Make sure you are viewing the **Ongoing** tab.
+  </Step>
+  <Step title="Create the campaign">
+    Click the **Create a campaign** button.
+  </Step>
+  <Step title="Fill in the campaign fields">
+    Complete the form with the following details:
+
+    | Field | Description |
+    |---|---|
+    | **Title** | A name for the campaign (internal reference only). |
+    | **Message** | The chat message the visitor will see in the widget. |
+    | **Sent by** | Select the agent whose name and avatar will appear as the sender. |
+    | **URL** | The page URL (or URL pattern) where the campaign should trigger. |
+    | **Time on Page** | Number of seconds a visitor must stay on the page before the message appears. |
+    | **Enable Campaign** | Toggle this on to activate the campaign immediately after saving. |
+
+  </Step>
+  <Step title="Save the campaign">
+    Click **Create**. The campaign is now active (if enabled) and will fire for visitors who match the page and time conditions.
+  </Step>
+</Steps>
+
+### How Visitors See the Campaign Message
+
+When a visitor meets the time-on-page threshold, the chat widget opens automatically and displays the campaign message — attributed to the agent you selected. The visitor can reply directly, and the response creates a new conversation in your Chatwoot inbox assigned to that agent.
+
+### Using Wildcard URLs
+
+The **URL** field in ongoing campaigns supports wildcard patterns so you can target multiple pages with a single rule.
+
+<AccordionGroup>
+  <Accordion title="Match an exact URL">
+    Enter the full URL without a trailing slash: `https://example.com/pricing`
+
+    This matches only that exact path. Query parameters and hash fragments will **not** match unless explicitly included.
+  </Accordion>
+  <Accordion title="Ignore query parameters and hash fragments">
+    Add a trailing slash: `https://example.com/pricing/`
+
+    This matches the path with or without query parameters or hash fragments.
+  </Accordion>
+  <Accordion title="Match all sub-directories">
+    Use an asterisk (`*`): `https://example.com/*`
+
+    This matches any path under the domain, including `https://example.com/blog`, `https://example.com/blog/post-1`, and so on.
+  </Accordion>
+  <Accordion title="Match all subdomains">
+    Use the `{*.}?` pattern: `https://{*.}?example.com/`
+
+    This matches the root domain and all subdomains — for example, `https://example.com`, `https://app.example.com`, and `https://www.example.com`.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  Every URL pattern must begin with `http://` or `https://`.
+</Note>

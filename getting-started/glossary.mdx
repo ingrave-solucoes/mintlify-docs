@@ -1,0 +1,210 @@
+---
+title: 'Chatwoot Glossary: Key Terms and Concepts'
+sidebarTitle: 'Glossary'
+description: 'A comprehensive reference of every key term and concept in Chatwoot — from Agents and Inboxes to Webhooks, SDKs, and CSAT surveys.'
+---
+
+This glossary defines the terms, features, and concepts you will encounter throughout Chatwoot and its documentation. If you are new to the platform, start here to build a solid mental model before diving into the setup guides.
+
+<AccordionGroup>
+
+  <Accordion title="@mention" icon="at">
+    An **@mention** lets you tag another agent (not a contact) in a private note on a conversation. Type `@` followed by the agent's name to notify them. The mentioned agent receives a notification and can immediately see the context of the conversation. Use @mentions to loop in specialists, escalate issues, or ask a quick internal question without leaving the conversation view.
+  </Accordion>
+
+  <Accordion title="Agent" icon="headset">
+    An **agent** is a support team member who communicates directly with customers and resolves their queries. Agents are sometimes called support representatives. Administrators assign agents to specific inboxes and teams, which controls which conversations each agent can see and work on. Agents can view only the conversations in the inboxes they have been granted access to.
+  </Accordion>
+
+  <Accordion title="Administrator" icon="shield-halved">
+    An **administrator** has full access to all account-level functions in Chatwoot — including inviting new users, adding conversation channels, configuring integrations, managing teams, and viewing all data in the account. Administrators are also agents themselves and can actively participate in conversations with customers if they choose.
+  </Accordion>
+
+  <Accordion title="API" icon="code">
+    **API** stands for Application Programming Interface. The Chatwoot REST API allows developers to access account data and functionality programmatically, enabling custom integrations, automated workflows, and third-party app connections. You can find the full reference in the [Chatwoot Developer API documentation](https://www.chatwoot.com/developers/api).
+  </Accordion>
+
+  <Accordion title="Assignee (Assigned Agent)" icon="user-check">
+    The **assignee** is the specific agent who owns and is responsible for resolving a conversation. Assignment defines accountability — the assignee works directly with the customer to solve their issue. If the assignee needs help, they can use @mentions to pull other agents into the conversation without formally re-assigning it.
+  </Accordion>
+
+  <Accordion title="Assigned Team" icon="people-group">
+    An **assigned team** is the team that owns a particular conversation. Teams are groups of agents with shared skills or responsibilities (e.g. Billing, Technical Support, or Sales). Assigning a conversation to a team ensures that all members of that team can see and act on it, even if a specific agent is not yet designated.
+  </Accordion>
+
+  <Accordion title="Audio Notifications" icon="volume-high">
+    **Audio notifications** play a sound alert in your browser when a new message arrives in a conversation — even if you are working in a different browser tab. You can configure audio notifications to fire for all conversations in your accessible inboxes, or only for conversations directly assigned to you. Configure this in your Profile Settings under Notifications.
+  </Accordion>
+
+  <Accordion title="Bot / Chatbot" icon="robot">
+    A **bot** (short for chatbot) is an automated agent that handles conversations without human intervention. Bots respond to customer queries using pre-defined rules or AI/ML models (such as Dialogflow), help customers troubleshoot issues, and hand off complex cases to a human agent when needed. Bots reduce the volume of repetitive conversations your human agents need to handle.
+  </Accordion>
+
+  <Accordion title="Bulk Import" icon="file-import">
+    **Bulk import** lets you add a large number of contacts at once by uploading a CSV file containing their details. This is far more efficient than creating contacts one by one and is the recommended way to migrate an existing customer database into Chatwoot.
+  </Accordion>
+
+  <Accordion title="Business Hours" icon="clock">
+    **Business hours** define your organisation's working schedule. When a customer contacts you outside of configured business hours, Chatwoot can automatically display an unavailability message or set appropriate response-time expectations. Configure business hours per inbox in your Inbox Settings.
+  </Accordion>
+
+  <Accordion title="Campaign" icon="bullhorn">
+    A **campaign** lets you send outbound messages to a list of customers. Chatwoot supports two campaign types:
+
+    - **One-off (one-time) campaigns** — Send a single message to a defined audience at a scheduled time. Ideal for announcements, product updates, or limited-time offers.
+    - **Ongoing campaigns** — Automatically trigger messages based on customer behaviour or attributes, such as time spent on a page. Ideal for proactive engagement on website live-chat inboxes.
+  </Accordion>
+
+  <Accordion title="Canned Response" icon="comment-dots">
+    A **canned response** is a saved, reusable reply template for frequently asked questions or common scenarios. Agents access canned responses directly from the text editor by typing `/` followed by a search term. Canned responses support rich text, lists, URLs, and formatting, enabling agents to send detailed, accurate replies in a single click — significantly improving response speed and consistency.
+  </Accordion>
+
+  <Accordion title="Channel" icon="satellite-dish">
+    A **channel** is a communication medium through which customers contact your team. Chatwoot supports a wide range of channels including website live chat, email, WhatsApp, Facebook, Instagram, Twitter, Telegram, Line, SMS, and custom API channels. Each channel is connected to Chatwoot through an **inbox**. You can connect multiple channels and manage all conversations from a single dashboard.
+  </Accordion>
+
+  <Accordion title="Contact" icon="address-card">
+    A **contact** is a customer or end-user record in Chatwoot. Each contact stores identity information (name, email, phone), conversation history, labels, custom attributes, and notes. Contacts are created automatically when new conversations arrive, or you can create them manually or via bulk import. A single contact can have multiple conversations across different inboxes and channels.
+  </Accordion>
+
+  <Accordion title="Contact Labels" icon="tag">
+    **Contact labels** are tags applied directly to a contact record (as opposed to a conversation). Use them to segment your contact database — for example, tagging contacts as `vip`, `enterprise`, or `churned` — making it easy to filter contacts and target specific audiences with campaigns.
+  </Accordion>
+
+  <Accordion title="Contact Sidebar" icon="sidebar">
+    The **contact sidebar** is the panel displayed on the right side of an open conversation. It shows the associated contact's profile information, previous conversations, custom attributes, and labels, giving agents full context without leaving the conversation view.
+  </Accordion>
+
+  <Accordion title="Conversation" icon="comments">
+    A **conversation** is a thread of messages between one or more agents and a customer. Every inbound message from a customer creates a new conversation (or continues an existing open one). Conversations have a status — **Open**, **Pending**, **Resolved**, or **Snoozed** — and can be assigned to agents, teams, and labels. The full conversation history is always preserved for reference.
+  </Accordion>
+
+  <Accordion title="Conversation Continuity" icon="link">
+    **Conversation continuity** ensures that when a customer sends a follow-up message — even through a different channel — Chatwoot links it to their existing contact record. For email inboxes, this means replies to a support email thread are threaded into the same conversation, preserving context for both the customer and the agent.
+  </Accordion>
+
+  <Accordion title="Conversation Labels" icon="tags">
+    **Conversation labels** are coloured tags applied to a conversation to categorise and filter it. Labels like `bug`, `billing`, `urgent`, or `feature-request` help agents and administrators organise workloads, build saved views, and generate label-specific reports. A single conversation can carry multiple labels.
+  </Accordion>
+
+  <Accordion title="CSAT (Customer Satisfaction Score)" icon="star">
+    **CSAT** stands for Customer Satisfaction Score. Chatwoot automatically sends a CSAT survey to the customer when a conversation is marked as resolved. The customer rates their experience, and the responses are aggregated in the **Reports → CSAT** section so you can track team and agent-level satisfaction trends over time.
+  </Accordion>
+
+  <Accordion title="Custom Attribute" icon="sliders">
+    **Custom attributes** are user-defined data fields you can add to contacts or conversations. They allow you to capture business-specific information — such as subscription plan, order ID, or account tier — that does not fit into Chatwoot's default fields. Custom attributes appear in the contact sidebar and can be used in automation rules and reports.
+  </Accordion>
+
+  <Accordion title="Dashboard" icon="gauge">
+    The **dashboard** is the main view of the Chatwoot interface. It shows all conversations across your accessible inboxes, grouped and filtered by status, assignment, label, team, or inbox. The dashboard is your primary workspace for managing day-to-day customer interactions.
+  </Accordion>
+
+  <Accordion title="Email Domain" icon="at">
+    An **email domain** is the domain name associated with your support email address (e.g. `support@yourdomain.com`). Verifying and configuring your email domain in Chatwoot enables conversation continuity for email inboxes and ensures outgoing emails pass standard spam checks (SPF, DKIM).
+  </Accordion>
+
+  <Accordion title="Email Notifications" icon="envelope">
+    **Email notifications** alert agents via email when qualifying events occur — such as a new conversation being assigned to them or a customer replying. Configure your email notification preferences in Profile Settings → Notifications. You can choose which event types trigger email notifications.
+  </Accordion>
+
+  <Accordion title="Email-Only Support" icon="envelope-open-text">
+    **Email-only support** refers to a Chatwoot inbox configured purely to handle email-based support. Customers send messages to a support address, agents reply from within Chatwoot, and the full thread is preserved as a conversation. No live-chat widget is involved.
+  </Accordion>
+
+  <Accordion title="Email Transcript" icon="file-lines">
+    An **email transcript** is a copy of a full conversation sent to the customer's email address. Agents can trigger a transcript manually from the conversation toolbar. This is useful for giving customers a written record of the support interaction, particularly for longer or more complex cases.
+  </Accordion>
+
+  <Accordion title="First Response Time" icon="stopwatch">
+    **First response time** is the time elapsed between a new conversation being created and the first reply sent by an agent. It is one of the primary performance metrics in Chatwoot Reports and is a key indicator of how quickly your team acknowledges incoming customer requests.
+  </Accordion>
+
+  <Accordion title="Inbox" icon="inbox">
+    An **inbox** is a configured connection to a specific communication channel — for example, a website live-chat widget, a WhatsApp number, or a support email address. Each inbox is independent and can have its own assigned agents, teams, business hours, and automation rules. A single Chatwoot account can have multiple inboxes across different channel types.
+  </Accordion>
+
+  <Accordion title="Knowledge Base / Help Center" icon="book-open">
+    The **Knowledge Base** (also called Help Center) is a built-in documentation portal you can publish from within Chatwoot. Create articles organised into categories and portals so customers can self-serve answers before or instead of starting a conversation. The Help Center integrates with the live-chat widget to surface relevant articles automatically.
+  </Accordion>
+
+  <Accordion title="Label" icon="label">
+    A **label** is a tag used to categorise and organise conversations or contacts. Labels are colour-coded and fully customisable. You can create labels like `urgent`, `refund`, `onboarding`, or `enterprise` and apply them manually or via automation rules. Labels are also used as filter criteria in conversation views and in label-specific reports.
+  </Accordion>
+
+  <Accordion title="Markdown" icon="markdown">
+    **Markdown** is a lightweight text formatting syntax supported in Chatwoot's rich content editor. Use Markdown to add bold (`**text**`), italics (`*text*`), bullet lists, numbered lists, code blocks, and hyperlinks to your messages. Not all channel types render Markdown — email and the web widget support it fully, while some messaging platforms render only plain text.
+  </Accordion>
+
+  <Accordion title="Message" icon="message">
+    A **message** is a single unit of communication within a conversation. Messages can be sent by a customer, an agent, or a bot. They can contain text, rich content, attachments, or interactive elements. Each message is timestamped and attributed to its sender, forming the conversation thread.
+  </Accordion>
+
+  <Accordion title="Metrics / Reports" icon="chart-bar">
+    **Metrics** are quantitative measurements of your team's performance. Chatwoot provides built-in reports covering overview statistics, agent-level breakdowns, inbox reports, label reports, team reports, and CSAT scores. Use metrics to identify bottlenecks, reward top performers, and make data-driven improvements to your support operations.
+  </Accordion>
+
+  <Accordion title="Mobile SDK" icon="mobile">
+    The **Mobile SDK** enables you to embed the Chatwoot live-chat widget directly inside your native Android or iOS application. Customers can start conversations without leaving your app, and agents handle those conversations from the standard Chatwoot dashboard or mobile app.
+  </Accordion>
+
+  <Accordion title="Mute" icon="volume-xmark">
+    **Muting** a conversation suppresses all notifications for that conversation for the current agent. The conversation remains visible and active — other agents are unaffected. Use mute for conversations you are monitoring passively but do not want to be constantly alerted about.
+  </Accordion>
+
+  <Accordion title="Ongoing Campaign" icon="rotate">
+    An **ongoing campaign** is a type of Chatwoot campaign that automatically sends a message to a visitor based on a trigger condition — for example, after they spend more than 30 seconds on a specific page. Ongoing campaigns are used in website live-chat inboxes to proactively engage visitors before they reach out.
+  </Accordion>
+
+  <Accordion title="One-off Campaign" icon="paper-plane">
+    A **one-off campaign** is a single outbound message sent to a selected list of contacts at a specific time. It is the equivalent of a broadcast message or newsletter. One-off campaigns are useful for product announcements, scheduled follow-ups, or targeted outreach to a defined segment.
+  </Accordion>
+
+  <Accordion title="Private Note" icon="lock">
+    A **private note** is an internal message added to a conversation that is visible only to agents — never to the customer. Use private notes to share context, ask questions, document decisions, or hand off a conversation to a colleague. You can @mention other agents in a private note to draw their attention to the conversation.
+  </Accordion>
+
+  <Accordion title="Push Notifications" icon="bell">
+    **Push notifications** are real-time alerts sent to the Chatwoot mobile app (Android or iOS) when qualifying events occur, such as a new message or a conversation assignment. Enable push notifications in your Profile Settings to stay informed even when you are not actively using the dashboard.
+  </Accordion>
+
+  <Accordion title="Quoted Text" icon="quote-left">
+    **Quoted text** is the portion of a previous message included in a reply to provide context. When replying to a specific message in a conversation, you can quote it so both the customer and the agent can see exactly which message is being addressed — particularly useful in longer threads.
+  </Accordion>
+
+  <Accordion title="Rich Content Editor" icon="pen-to-square">
+    The **rich content editor** is the text input area agents use to compose messages in Chatwoot. It supports Markdown formatting, canned responses (via `/`), @mentions, emoji, attachments, and message signatures. The editor adapts based on the channel type — some channels support full rich text while others are limited to plain text.
+  </Accordion>
+
+  <Accordion title="Rich Content Message" icon="image">
+    A **rich content message** is a message that contains more than plain text — such as buttons, images, cards, or interactive elements. Rich content messages are typically sent by bots or via the API and are rendered visually in supported channels like the website live-chat widget.
+  </Accordion>
+
+  <Accordion title="Round-Robin Assignment" icon="arrows-spin">
+    **Round-robin assignment** is an automatic conversation routing method that distributes incoming conversations evenly across all available and online agents in an inbox or team. It prevents any single agent from being overloaded and ensures conversations are picked up quickly without requiring manual assignment.
+  </Accordion>
+
+  <Accordion title="SDK" icon="toolbox">
+    An **SDK** (Software Development Kit) is a set of libraries and tools provided by Chatwoot for developers to integrate the Chatwoot chat widget into web or mobile applications. The JavaScript SDK handles the web widget, while separate Android and iOS SDKs support native mobile integration.
+  </Accordion>
+
+  <Accordion title="Snooze" icon="clock">
+    **Snoozing** a conversation temporarily removes it from your active queue and re-opens it automatically at a time you specify. Use snooze when you are waiting for a customer response or need to follow up at a particular time. Snoozed conversations reappear in your dashboard when the snooze period expires.
+  </Accordion>
+
+  <Accordion title="Team" icon="users">
+    A **team** is a named group of agents organised around a shared function, skill set, or product area — for example, *Tier 1 Support*, *Billing*, or *Enterprise Accounts*. Conversations can be assigned to a team so any member can pick them up. Teams also enable team-specific automation rules and reports.
+  </Accordion>
+
+  <Accordion title="Unassigned Conversation" icon="circle-question">
+    An **unassigned conversation** is a conversation that has arrived in an inbox but has not yet been assigned to a specific agent or team. Unassigned conversations appear in the **All Conversations → Unassigned** view and should be claimed or assigned promptly to avoid delayed responses.
+  </Accordion>
+
+  <Accordion title="Visitor" icon="eye">
+    A **visitor** is an unidentified contact who has reached your website or live-chat widget but has not yet provided their identity (name, email, etc.). Visitors become **contacts** once they submit identifying information — either through the pre-chat form, by starting a conversation, or when an agent manually identifies them.
+  </Accordion>
+
+  <Accordion title="Webhook" icon="webhook">
+    A **webhook** is an HTTP callback that Chatwoot sends to a URL of your choice when specific events occur — such as a conversation being created, updated, or resolved, or a new message arriving. Webhooks let you connect Chatwoot to external systems (CRMs, analytics platforms, custom bots) in real time without polling the API. Configure webhooks in **Settings → Integrations → Webhooks**.
+  </Accordion>
+
+</AccordionGroup>

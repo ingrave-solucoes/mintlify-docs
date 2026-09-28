@@ -1,0 +1,145 @@
+---
+title: 'Connect Third-Party Tools to Chatwoot'
+sidebarTitle: 'Integrations'
+description: 'Enable Slack, Google Translate, Dialogflow, Dyte, and Dashboard Apps from the Chatwoot Integrations settings page to extend your support workflow.'
+---
+
+Chatwoot connects with a growing set of third-party tools so you can bring your conversations, automation, and customer data together in one place. You can find every available integration under **Settings → Integrations**, where each tile shows whether the integration is already connected and provides a button to configure or connect it for the first time.
+
+---
+
+## Slack
+
+The Slack integration forwards every incoming Chatwoot conversation to a Slack channel of your choice. Your agents can read, reply, and create private notes directly from Slack without switching tabs.
+
+### Enable Slack
+
+<Steps>
+  <Step title="Open the Slack integration">
+    Go to **Settings → Integrations → Slack** and click **Connect**.
+  </Step>
+  <Step title="Authorize Chatwoot in Slack">
+    Enter your Slack workspace URL when prompted, then review the permission request and click **Allow** to grant Chatwoot access to your workspace.
+  </Step>
+  <Step title="Select a Slack channel">
+    After authorization, you are redirected back to Chatwoot where you can choose a public or private Slack channel from the dropdown. All new Chatwoot conversations will be posted there as threads.
+  </Step>
+  <Step title="Save the configuration">
+    Click **Update** to complete the setup.
+  </Step>
+</Steps>
+
+<Info>
+  Each conversation thread in Slack maps to a single Chatwoot conversation. Always reply **inside the thread** — top-level channel messages are not forwarded back to the customer.
+</Info>
+
+### Reply as your agent profile
+
+When you reply inside a conversation thread in Slack, Chatwoot sends the message from your linked agent profile. The customer sees the reply exactly as if you had typed it in the Chatwoot dashboard.
+
+### Create private notes from Slack
+
+Prefix any Slack thread reply with `note:` to create a [private note](https://www.chatwoot.com/features/private-notes) instead of a customer-visible message. You can also tag teammates with `@mention` inside the note.
+
+<Warning>
+  If you set up the Slack integration before September 2023, the channel-selection option was not available at that time. Delete your existing integration under **Settings → Integrations → Slack** and reconnect to gain channel-selection support.
+</Warning>
+
+---
+
+## Google Translate
+
+The Google Translate integration lets agents instantly translate any incoming message with a single click, removing language barriers when serving a global customer base.
+
+### Enable Google Translate
+
+<Steps>
+  <Step title="Open the Google Translate integration">
+    Go to **Settings → Integrations → Google Translate** and click **Configure**, then click **Connect**.
+  </Step>
+  <Step title="Enter your Google Cloud credentials">
+    Provide your **Google Cloud Project ID** and the **Project Key File** content. Refer to the [Google Cloud Translation setup guide](https://cloud.google.com/translate/docs/setup) if you need help generating these values.
+  </Step>
+  <Step title="Create the integration">
+    Click **Create**. Chatwoot confirms the connection and the integration becomes active immediately.
+  </Step>
+</Steps>
+
+### Translate a message
+
+Once the integration is active, open any conversation, click the **three-dot menu (⋯)** beside the incoming message you want to translate, and select **Translate**. The translated text appears in a popup.
+
+<Tip>
+  Translations use your account's **Site Language** as the target language. Change it under **Settings → Account Settings → Site Language**. Individual agents can also set their own preferred language in their profile settings.
+</Tip>
+
+---
+
+## Dialogflow
+
+Dialogflow lets you attach a Google Dialogflow agent (bot) to one or more Chatwoot inboxes. The bot handles incoming questions automatically and hands off to a human agent when it cannot resolve the query.
+
+### Enable Dialogflow
+
+<Steps>
+  <Step title="Open the Dialogflow integration">
+    Go to **Settings → Integrations → Dialogflow** and click **Configure**, then click **Add a new hook**.
+  </Step>
+  <Step title="Enter your Dialogflow credentials">
+    | Field | Description |
+    |---|---|
+    | **Dialogflow Project ID** | Your Google Cloud project name |
+    | **Dialogflow Project Key File** | The service account JSON key file content |
+    | **Select Inbox** | The Chatwoot inbox this bot should handle |
+  </Step>
+  <Step title="Save the hook">
+    Click **Create**. The bot is now active on the selected inbox. Repeat for additional inboxes as needed.
+  </Step>
+</Steps>
+
+---
+
+## Dyte
+
+The Dyte integration adds one-click video and voice calling directly inside Chatwoot conversations. Agents can initiate a Dyte meeting from within the conversation window, and the customer receives a call link without leaving the chat.
+
+### Enable Dyte
+
+<Steps>
+  <Step title="Open the Dyte integration">
+    Go to **Settings → Integrations → Dyte** and click **Configure**.
+  </Step>
+  <Step title="Enter your Dyte API credentials">
+    Provide your **Dyte Organization ID** and **API Key**, available from your Dyte developer dashboard.
+  </Step>
+  <Step title="Save">
+    Click **Create**. Agents now see a **Video Call** button in the conversation toolbar.
+  </Step>
+</Steps>
+
+---
+
+## Dashboard Apps
+
+Dashboard Apps let you embed any web application — an internal CRM, a knowledge base, a ticketing system — as an extra panel inside the Chatwoot conversation view. Agents see your custom app side-by-side with the conversation without opening a separate browser tab.
+
+### Add a Dashboard App
+
+<Steps>
+  <Step title="Open Dashboard Apps">
+    Go to **Settings → Integrations → Dashboard Apps** and click **Add new Dashboard App**.
+  </Step>
+  <Step title="Configure the app">
+    | Field | Description |
+    |---|---|
+    | **Name** | A label shown in the sidebar panel tab |
+    | **URL** | The full HTTPS URL of the web application to embed |
+  </Step>
+  <Step title="Save">
+    Click **Create**. The app appears as an extra panel in the right-hand sidebar of every conversation.
+  </Step>
+</Steps>
+
+<Info>
+  The embedded URL receives contextual data (conversation ID, contact details, account information) via `postMessage` events so your custom app can display relevant customer information automatically. See the [Dashboard Apps developer guide](https://www.chatwoot.com/blog/dashboard-apps) for the full event reference.
+</Info>

@@ -1,0 +1,159 @@
+---
+title: 'Connect Facebook, Instagram, and Twitter to Chatwoot'
+sidebarTitle: 'Social Media'
+description: 'Link your Facebook Page, Instagram Business account, and Twitter/X handle to Chatwoot so your team manages all social DMs and mentions in one inbox.'
+---
+
+Chatwoot lets your support team handle Facebook Messenger conversations, Instagram direct messages, and Twitter DMs and mentions without leaving the dashboard. Each social platform becomes a separate inbox, but your agents work from the same unified queue. Set up one platform, all three, or any combination — the steps for each are covered below.
+
+<Warning>
+  **Self-hosted installations**: Before following these steps, configure your Facebook and Twitter app credentials at the server level. See the [self-hosted configuration guide](/self-hosted/configuration) for details on adding your Facebook and Twitter app credentials to your server environment. The cloud version of Chatwoot does not require this extra step.
+</Warning>
+
+---
+
+## Facebook Messenger
+
+Connect a Facebook Page to Chatwoot so that every Messenger conversation from your customers lands in your inbox.
+
+### Steps
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **Messenger** icon.
+  </Step>
+  <Step title="Log in to Facebook">
+    Click the **Facebook Login** button. A new window opens — log in with the Facebook account that manages your Page.
+  </Step>
+  <Step title="Authenticate and grant permissions">
+    Select the Facebook Page you want to connect. Enable **all permissions** shown in the list. These permissions allow Chatwoot to read messages, send replies, and manage conversations on your behalf.
+  </Step>
+  <Step title="Select your Facebook Page">
+    After authentication, choose your Page from the dropdown in Chatwoot.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox and click **Add Agents**.
+  </Step>
+</Steps>
+
+Your Facebook inbox is now live. Every new Messenger message sent to your Page appears as a conversation in Chatwoot.
+
+### Facebook Inbox Settings
+
+Navigate to **Settings → Inboxes → (your Facebook inbox) → gear icon** to access these options:
+
+<AccordionGroup>
+  <Accordion title="Channel Greeting">
+    Enable **Channel Greeting** to send an automatic message when a new Messenger conversation starts. Customize the greeting text to match your brand.
+  </Accordion>
+  <Accordion title="CSAT">
+    Enable **CSAT** to send a satisfaction survey automatically when a conversation is resolved.
+  </Accordion>
+  <Accordion title="Reauthorize">
+    If your Facebook connection expires or you change Page permissions, click **Reauthorize** to reconnect without creating a new inbox.
+  </Accordion>
+  <Accordion title="Business Hours">
+    Set daily availability windows and a timezone. Customers who message outside these hours receive your configured offline message.
+  </Accordion>
+  <Accordion title="Collaborators">
+    Add or remove agents and toggle automatic conversation assignment on or off.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  Facebook restricts outbound messaging: you cannot send promotional messages more than **24 hours** after the customer's last inbound message. Plan your response workflows accordingly.
+</Note>
+
+---
+
+## Instagram
+
+Connect your Instagram Business account to receive and reply to direct messages in Chatwoot. Instagram integration works through the same Facebook login flow used for Messenger.
+
+### Prerequisites
+
+Before connecting Instagram, complete these two steps:
+
+1. **Convert to a Business account**: Follow [Instagram's guide](https://help.instagram.com/502981923235522) if your account is still a personal or Creator account.
+2. **Link your Instagram account to a Facebook Page**: In Facebook, go to your Page → **Settings → Instagram** and connect your Business account.
+
+### Steps
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **Messenger** icon. (Instagram uses the same connector as Facebook Messenger.)
+  </Step>
+  <Step title="Log in to Facebook">
+    Click the **Facebook Login** button and log in with the account connected to your Instagram Business profile.
+  </Step>
+  <Step title="Authenticate and select your Instagram account">
+    When prompted, select your Instagram account and the linked Facebook Page. Enable all permissions in the list.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox and click **Add Agents**.
+  </Step>
+</Steps>
+
+Your Instagram inbox is ready. New direct messages sent to your Instagram Business account appear as conversations in Chatwoot.
+
+<Tip>
+  If you manage both a Facebook Page and an Instagram account for the same brand, create two separate inboxes — one for Messenger and one for Instagram — so conversations stay organized.
+</Tip>
+
+---
+
+## Twitter / X
+
+Connect your Twitter (X) handle to manage direct messages and tweet mentions from inside Chatwoot.
+
+<Warning>
+  Twitter/X integration has been **temporarily discontinued** due to changes Twitter made to its API, including per-minute request limits and significant pricing changes. Check the [Chatwoot changelog](https://www.chatwoot.com/changelog) for updates on when this integration resumes. The steps below reflect the setup process when the integration is available.
+</Warning>
+
+### Steps
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **Twitter** icon.
+  </Step>
+  <Step title="Sign in with Twitter">
+    Click **Sign in with Twitter**. You are redirected to Twitter's authorization page.
+  </Step>
+  <Step title="Authorize the Chatwoot app">
+    Click **Authorize app** on the Twitter authorization screen. You are returned to Chatwoot automatically.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox and click **Add Agents**.
+  </Step>
+</Steps>
+
+Once connected, you can manage both **Twitter DMs** and **tweet mentions** from the Chatwoot dashboard.
+
+### Twitter Inbox Settings
+
+Go to **Settings → Inboxes → (your Twitter inbox) → gear icon** for these options:
+
+<AccordionGroup>
+  <Accordion title="Channel Greeting">
+    Send an automatic greeting when a new Twitter DM conversation starts.
+  </Accordion>
+  <Accordion title="CSAT">
+    Enable satisfaction surveys to run automatically when conversations are resolved.
+  </Accordion>
+  <Accordion title="Business Hours">
+    Define working hours and configure an offline message for customers who contact you outside those windows.
+  </Accordion>
+  <Accordion title="Collaborators">
+    Manage agent access to the inbox and configure automatic assignment.
+  </Accordion>
+</AccordionGroup>
+
+### Channel Capabilities
+
+| Feature | Facebook Messenger | Instagram DMs | Twitter DM | Tweets |
+|---|---|---|---|---|
+| Attachments | ✅ | ✅ | ❌ | ❌ |
+| Max message length | 640 chars | 1,000 chars | 10,000 chars | 280 chars |
+| Outgoing restrictions | 24-hour rule | 24-hour rule | None | None |
+| CSAT | ✅ | ✅ | ✅ | ✅ |
+| Auto-assignment | ✅ | ✅ | ✅ | ✅ |

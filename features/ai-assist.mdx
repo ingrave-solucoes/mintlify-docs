@@ -1,0 +1,102 @@
+---
+title: 'AI-Assisted Replies and Suggestions in Chatwoot'
+sidebarTitle: 'AI Assist'
+description: 'Use Chatwoot AI Assist to generate reply suggestions, fix grammar, adjust tone, expand or shorten drafts, and summarize long conversations instantly.'
+---
+
+Chatwoot AI Assist brings AI-powered writing tools directly into the agent reply editor. Rather than switching between your support platform and an external AI tool, you can generate reply suggestions, polish draft messages, change their tone, and summarize lengthy conversations — all without leaving the conversation window. The result is faster, more consistent, and more professional customer communication.
+
+<Info>
+  Chatwoot currently uses OpenAI's `gpt-3.5-turbo` model as its AI provider. Support for additional providers is planned for future releases.
+</Info>
+
+## Enabling AI Assist
+
+Before agents can use AI Assist, an administrator must connect Chatwoot to an OpenAI API key.
+
+<Steps>
+  <Step title="Open Application settings">
+    In the Chatwoot sidebar, click **Settings**, then click **Applications** (or **Integrations → Applications**).
+  </Step>
+  <Step title="Configure OpenAI">
+    Find the **OpenAI** integration card and click the **Configure** button.
+  </Step>
+  <Step title="Generate an OpenAI API key">
+    If you don't already have one, log in to your [OpenAI account](https://platform.openai.com/account/api-keys) and create a new secret key.
+  </Step>
+  <Step title="Connect your account">
+    Paste the API key into the input field and click **Create**. Chatwoot saves the key and activates AI Assist for all agents on your account.
+  </Step>
+</Steps>
+
+<Warning>
+  Keep your OpenAI API key confidential. Anyone with access to the key can make requests that are billed to your OpenAI account.
+</Warning>
+
+## Using AI Assist in a Conversation
+
+Once AI Assist is enabled, every agent can access it from the reply editor.
+
+<Steps>
+  <Step title="Open a conversation and start your reply">
+    Navigate to any conversation and click into the reply editor at the bottom of the conversation view.
+  </Step>
+  <Step title="Toggle AI Assist">
+    Click the **AI Assist** button inside the editor toolbar, or open it through the command bar (`Cmd+K` / `Ctrl+K`).
+  </Step>
+  <Step title="Select a feature">
+    A menu of AI actions appears. Click the action you want to use (see the full list below).
+  </Step>
+  <Step title="Review the AI suggestion">
+    The **Reply Suggestion with AI** modal opens, displaying the AI-generated content. Read through it and verify it is accurate before using it.
+  </Step>
+  <Step title="Insert the content">
+    Click **Use this suggestion** to insert the content into your reply editor. Edit it further if needed before sending.
+  </Step>
+</Steps>
+
+## Available AI Features
+
+<AccordionGroup>
+  <Accordion title="Reply Suggestions">
+    AI Assist analyses the conversation history and generates a contextually relevant reply for you to use or adapt. This is especially useful when handling complex or repetitive queries, letting you respond quickly without composing from scratch.
+  </Accordion>
+  <Accordion title="Fix Spelling and Grammar">
+    Select this option to have AI Assist automatically correct spelling mistakes and grammatical errors in your current draft, ensuring every message you send looks polished and professional.
+  </Accordion>
+  <Accordion title="Expand">
+    If your draft is too brief, AI Assist can expand it with additional context, explanation, or helpful details — while keeping the original intent intact.
+  </Accordion>
+  <Accordion title="Shorten">
+    Use this option to condense a long or wordy draft into a cleaner, more concise message that is easier for the customer to read quickly.
+  </Accordion>
+  <Accordion title="Change Tone to Friendly">
+    Adjust the tone of your draft to sound warmer and more approachable — useful when responding to frustrated or anxious customers.
+  </Accordion>
+  <Accordion title="Use Formal Tone">
+    Apply a professional, formal register to your draft — appropriate for B2B customers, legal matters, or any situation where a more authoritative voice is needed.
+  </Accordion>
+  <Accordion title="Simplify">
+    Rewrite your draft in simpler language, removing jargon and complex sentence structures so the customer can understand the answer more easily.
+  </Accordion>
+  <Accordion title="Summarize">
+    Generate a brief summary of a long customer message or conversation thread. This feature is only available in the **private note** editor, making it useful for quickly briefing a colleague on an ongoing case.
+  </Accordion>
+</AccordionGroup>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Are AI Assist suggestions always accurate?">
+    No — AI-generated content may contain errors or miss context specific to your product or policies. Always review suggestions before sending them to a customer. Chatwoot continuously works to improve the quality of AI Assist output.
+  </Accordion>
+  <Accordion title="Does AI Assist work in all inboxes?">
+    Yes. Once the OpenAI integration is configured, AI Assist is available in the reply editor for all conversation types, regardless of channel.
+  </Accordion>
+  <Accordion title="Can I use AI providers other than OpenAI?">
+    Currently only OpenAI is supported. Additional providers are on the roadmap for future releases.
+  </Accordion>
+  <Accordion title="Is my conversation data sent to OpenAI?">
+    When you use AI Assist features, the relevant message content is sent to OpenAI's API for processing. Review OpenAI's data usage policies and your own privacy obligations before enabling AI Assist in regulated environments.
+  </Accordion>
+</AccordionGroup>

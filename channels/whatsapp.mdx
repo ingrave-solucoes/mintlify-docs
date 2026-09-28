@@ -1,0 +1,165 @@
+---
+title: 'Connect WhatsApp to Your Chatwoot Inbox'
+sidebarTitle: 'WhatsApp'
+description: 'Set up a WhatsApp inbox using WhatsApp Cloud API, Twilio, or 360Dialog — choose your provider, enter your credentials, and receive messages in Chatwoot.'
+---
+
+Chatwoot supports three ways to connect a WhatsApp number to your inbox: the **WhatsApp Cloud API** (Meta's official Business API), **Twilio**, and **360Dialog**. Each option works for different situations — Cloud API gives you a direct integration with Meta, Twilio offers a managed platform if you already use it, and 360Dialog is a popular BSP (Business Solution Provider) alternative. Choose the provider that fits your existing setup, then follow the steps below.
+
+## Option 1: WhatsApp Cloud API (Recommended)
+
+WhatsApp Cloud API is Meta's native API. It gives you the most direct integration and does not require a third-party intermediary.
+
+### Prerequisites
+
+Before creating the inbox in Chatwoot, complete the following steps in Meta's developer tools.
+
+<Steps>
+  <Step title="Create a Facebook Developer App with WhatsApp enabled">
+    Go to the [WhatsApp Cloud API Getting Started guide](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started) and follow the **Set up Developer Assets and Platform Access** section. Once complete, you will have a **Phone Number ID** and a **WhatsApp Business Account ID** — keep both handy.
+  </Step>
+  <Step title="Create a system user in Business Manager">
+    In [Meta Business Manager](https://business.facebook.com), go to **System Users** and create a new system user. Grant the user access to your WhatsApp Business account by opening **WhatsApp Accounts → Add People**.
+  </Step>
+  <Step title="Generate an access token">
+    From the System Users panel, generate a permanent access token for the system user. When prompted, select the `whatsapp_business_management` and `whatsapp_business_messaging` permissions. Save this token — it becomes your **API Key** in Chatwoot.
+  </Step>
+</Steps>
+
+### Create the Inbox in Chatwoot
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **WhatsApp** icon.
+  </Step>
+  <Step title="Choose WhatsApp Cloud as the provider">
+    Select **WhatsApp Cloud** from the API provider dropdown.
+  </Step>
+  <Step title="Fill in your credentials">
+    Complete all required fields:
+
+    | Field | Description |
+    |---|---|
+    | Name | A display name for this inbox (e.g., `Support WhatsApp`) |
+    | Phone Number | The phone number registered in your Facebook Developer App |
+    | Phone Number ID | The numeric Phone Number ID from the Meta developer dashboard |
+    | Business Account ID | The WhatsApp Business Account ID from Meta |
+    | API Key | The system user access token you generated above |
+    | Webhook Verify Token | A secure alphanumeric string you create — used to verify the webhook |
+
+    Click **Create Inbox** and note the **Webhook Callback URL** shown at the end of the flow.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox so they can see and respond to incoming WhatsApp messages.
+  </Step>
+  <Step title="Configure the webhook in Meta">
+    Return to your Facebook Developer App. Open **WhatsApp → Configuration** and enter:
+    - **Callback URL**: the URL shown at the end of the Chatwoot inbox creation (format: `https://app.chatwoot.com/webhooks/whatsapp/+{phone_number}`)
+    - **Verify Token**: the same value you entered for **Webhook Verify Token**
+
+    Also subscribe to **messages** under **Webhook Fields**.
+  </Step>
+</Steps>
+
+<Note>
+  If you manage multiple WhatsApp numbers under a single Facebook App, you only need to configure the webhook once. Use the Callback URL from one inbox — all other inboxes under the same app will receive messages correctly.
+</Note>
+
+---
+
+## Option 2: Twilio WhatsApp
+
+Use this option if you already have a verified WhatsApp number inside your Twilio account.
+
+### What You Need
+
+Gather the following credentials from your [Twilio Console](https://console.twilio.com):
+
+| Credential | Where to Find It |
+|---|---|
+| Phone Number | The verified WhatsApp number in your Twilio dashboard |
+| Account SID | Shown on the Twilio Console home page |
+| Auth Token | Shown on the Twilio Console home page (click to reveal) |
+
+### Create the Inbox
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **WhatsApp** icon.
+  </Step>
+  <Step title="Choose Twilio as the provider">
+    Select **Twilio** from the API provider dropdown.
+  </Step>
+  <Step title="Enter your Twilio credentials">
+    Fill in the **Inbox Name**, **Phone Number**, **Account SID**, and **Auth Token**, then click **Create Twilio Channel**.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox.
+  </Step>
+  <Step title="Configure the callback URL in Twilio">
+    In your Twilio Console, navigate to **Programmable SMS → WhatsApp → Senders**, click your phone number, and set the **WHEN A MESSAGE COMES IN** field to:
+
+    ```
+    https://app.chatwoot.com/twilio/callback
+    ```
+  </Step>
+</Steps>
+
+### Using Twilio Studio
+
+If you use Twilio Studio for a custom conversation flow, do **not** overwrite the webhook URL directly — this breaks your existing Studio integration. Instead, add an **HTTP Request** widget at the agent handoff step in your flow with these values:
+
+| Setting | Value |
+|---|---|
+| Request Method | `POST` |
+| Request URL | `https://app.chatwoot.com/twilio/callback` |
+| Content Type | `Application/JSON` |
+| Request Body | `{{trigger.message \| to_json}}` |
+
+The widget forwards the message to Chatwoot and creates a conversation for your agents to handle. Make sure your Studio flow is also configured to handle replies that agents send back.
+
+---
+
+## Option 3: 360Dialog
+
+360Dialog is a Meta Business Solution Provider that gives you a WhatsApp API key you can use directly in Chatwoot.
+
+### What You Need
+
+- A 360Dialog account with an active WhatsApp Business number
+- Your **360Dialog API key** from the 360Dialog Hub
+
+### Create the Inbox
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **WhatsApp** icon.
+  </Step>
+  <Step title="Choose 360Dialog as the provider">
+    Select **360Dialog** from the API provider dropdown.
+  </Step>
+  <Step title="Enter your credentials">
+    Fill in your inbox name, phone number, and 360Dialog API key.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox and click **Finish**.
+  </Step>
+</Steps>
+
+---
+
+## Additional Inbox Settings
+
+After creating any WhatsApp inbox, click the **gear icon** next to it in **Settings → Inboxes** to configure greeting messages, business hours, CSAT surveys, and agent auto-assignment — the same options available across all Chatwoot inboxes.
+
+## Supported Media Types (WhatsApp Cloud API)
+
+WhatsApp Cloud API supports a wide range of media types in both directions:
+
+| Type | Formats |
+|---|---|
+| Audio | AAC, MP4, MPEG, AMR, OGG |
+| Documents | PDF, DOCX, XLSX, PPTX, plain text |
+| Images | JPEG, PNG |
+| Video | MP4 (3GP supported for end users only) |
+| Stickers | WebP (end users only; not rendered on agent dashboard) |

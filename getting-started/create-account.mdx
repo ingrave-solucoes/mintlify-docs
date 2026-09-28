@@ -1,0 +1,138 @@
+---
+title: 'Create Your Chatwoot Account and First Inbox'
+sidebarTitle: 'Create Account'
+description: 'Sign up for Chatwoot, verify your email, configure your first inbox, and invite agents to start handling customer conversations right away.'
+---
+
+Getting started with Chatwoot takes only a few minutes. Whether you are using Chatwoot Cloud or a self-hosted installation, this guide walks you through creating your account, verifying your email, setting up your first inbox, and bringing your team on board.
+
+## Choose Your Setup Path
+
+<Tabs>
+  <Tab title="Chatwoot Cloud">
+    Use the managed cloud service at [chatwoot.com](https://www.chatwoot.com) — no infrastructure required. Follow the steps below to sign up.
+  </Tab>
+  <Tab title="Self-Hosted">
+    If you are running your own Chatwoot installation, navigate to `{your_installation_url}/app/auth/signup` and follow the same registration steps. Refer to the [self-hosted documentation](/self-hosted/overview) for server setup details.
+  </Tab>
+</Tabs>
+
+## Create Your Account
+
+<Steps>
+  <Step title="Open the Sign-Up Page">
+    Go to [chatwoot.com](https://www.chatwoot.com) and click **Create a free account**. This takes you directly to the registration form.
+  </Step>
+
+  <Step title="Fill in Your Details">
+    Complete every field in the registration form. All fields are required.
+
+    | Field            | Description                                                                                                      |
+    | ---------------- | ---------------------------------------------------------------------------------------------------------------- |
+    | Full Name        | Your full name, e.g. *Jane Doe*                                                                                  |
+    | Work Email       | A valid work email address, e.g. *jane.doe@company.com*                                                          |
+    | Account Name     | Your company or organisation name, e.g. *Acme Corp*                                                             |
+    | Password         | Must include at least one uppercase letter (A–Z), one number (0–9), and one special character (`!@#$%^&*` etc.) |
+    | Confirm Password | Must match the password entered above                                                                            |
+
+    <Tip>
+      Use a work email address rather than a personal one. Chatwoot uses this address for login, notifications, and email-based conversation continuity.
+    </Tip>
+  </Step>
+
+  <Step title="Submit and Access the Dashboard">
+    Click **Sign Up**. Chatwoot automatically logs you in and takes you to the main dashboard. A confirmation email with the subject **Confirmation Instructions** is sent to the address you provided.
+  </Step>
+
+  <Step title="Verify Your Email">
+    Open the confirmation email and click the **Confirm my account** button. Email verification is required before you can use certain features such as sending outbound emails.
+
+    <Info>
+      If you do not see the email within a couple of minutes, check your spam or junk folder. You can also request a new confirmation link from the dashboard notification banner.
+    </Info>
+  </Step>
+</Steps>
+
+## Set Up Your First Inbox
+
+An inbox is a connected communication channel — for example, your website live-chat widget, a WhatsApp number, or a support email address. Create at least one inbox so your team can start receiving conversations.
+
+<Steps>
+  <Step title="Navigate to Inbox Settings">
+    In the left sidebar, click **Settings**, then select **Inboxes**. Click the **Add Inbox** button in the top-right corner.
+  </Step>
+
+  <Step title="Select a Channel Type">
+    Choose the channel you want to connect. Common starting points include:
+
+    <CardGroup cols={3}>
+      <Card title="Website Live Chat" icon="globe">
+        Embed a chat widget on your website to talk with visitors in real time.
+      </Card>
+      <Card title="Email" icon="envelope">
+        Connect a support email address and manage replies inside Chatwoot.
+      </Card>
+      <Card title="WhatsApp" icon="whatsapp">
+        Link your WhatsApp Business number via WhatsApp Cloud API, Twilio, or 360Dialog.
+      </Card>
+    </CardGroup>
+  </Step>
+
+  <Step title="Configure the Inbox">
+    Enter a name for the inbox (e.g. *Website Chat* or *Support Email*) and complete the channel-specific settings presented on screen. Each channel type has its own configuration fields — refer to the [Channels Overview](/channels/overview) for detailed instructions per channel.
+  </Step>
+
+  <Step title="Add Agents to the Inbox">
+    After saving the inbox settings, Chatwoot prompts you to assign agents. Select the agents who should have access to this inbox and click **Add Agents**. You can update this list at any time from **Settings → Inboxes → Settings** for the relevant inbox.
+  </Step>
+
+  <Step title="Finish Setup">
+    Click **Finish**. Your inbox is now live and will start receiving conversations as soon as your channel is connected and active.
+  </Step>
+</Steps>
+
+## Invite Your Team
+
+Add your support agents so they can start working on conversations alongside you.
+
+<Steps>
+  <Step title="Go to Agent Settings">
+    Navigate to **Settings → Agents** in the left sidebar.
+  </Step>
+
+  <Step title="Invite a New Agent">
+    Click **Invite Agent**. Enter the agent's full name, email address, and choose their role.
+
+    | Role          | Permissions                                                                                    |
+    | ------------- | ---------------------------------------------------------------------------------------------- |
+    | Agent         | Can view and reply to conversations in assigned inboxes. Cannot access account-level settings. |
+    | Administrator | Has full access to all inboxes, settings, reports, and user management.                        |
+  </Step>
+
+  <Step title="Send the Invitation">
+    Click **Send Invite**. The agent receives an email with a link to set their password and access the dashboard.
+
+    <Note>
+      Agents only see conversations in the inboxes they have been assigned to. Make sure to add each agent to the relevant inboxes after they accept the invitation.
+    </Note>
+  </Step>
+</Steps>
+
+## Next Steps
+
+Now that your account is live and your first inbox is configured, continue with these setup tasks:
+
+<CardGroup cols={2}>
+  <Card title="Set Up Your Profile" icon="circle-user" href="/getting-started/setup-profile">
+    Add your avatar, display name, notification preferences, and availability status.
+  </Card>
+  <Card title="Configure Account Details" icon="sliders" href="/getting-started/setup-profile">
+    Update your account name, default language, and auto-resolve settings.
+  </Card>
+  <Card title="Explore the Glossary" icon="book-open" href="/getting-started/glossary">
+    Learn the key terms and concepts you will encounter throughout Chatwoot.
+  </Card>
+  <Card title="Channels Overview" icon="network-wired" href="/channels/overview">
+    Dive deeper into every supported channel and how to connect them.
+  </Card>
+</CardGroup>

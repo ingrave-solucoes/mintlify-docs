@@ -1,0 +1,141 @@
+---
+title: 'Manage Your Customer Contacts in Chatwoot'
+sidebarTitle: 'Contacts'
+description: 'View, add, edit, filter, and bulk-import customer contacts in Chatwoot, and start new outbound conversations directly from any contact profile.'
+---
+
+The Contacts section in Chatwoot is your central customer database. Every person who has interacted with you through any channel — whether via the live-chat widget, email, WhatsApp, or SMS — can be stored here with their profile details, conversation history, and custom notes. You can manage this database manually, through pre-chat forms, or by bulk-importing a CSV file.
+
+## Accessing Contacts
+
+Click **Contacts** in the Chatwoot sidebar to open the contacts list. If you have existing contacts, they appear in a searchable, filterable table. If the list is empty, you can start adding contacts right away.
+
+## Viewing a Contact Profile
+
+Click any contact's name to open their profile page. The profile shows:
+
+- **Basic information** — name, email address, phone number, company, and location.
+- **Conversation history** — a list of every past conversation the contact has had across all inboxes.
+- **Contact notes** — free-form notes added by agents.
+- **Custom attributes** — any contact-level custom attributes defined in your account settings.
+
+## Adding a New Contact
+
+You can create contacts in three ways:
+
+<CardGroup cols={3}>
+  <Card title="Manual Creation" icon="user-plus">
+    Click the **New Contact** button on the contacts page and fill in the contact details form.
+  </Card>
+  <Card title="Pre-Chat Form" icon="clipboard-list">
+    When a visitor submits the pre-chat form on your live-chat widget, Chatwoot automatically creates or updates a contact record.
+  </Card>
+  <Card title="Widget Greeting" icon="comment-smile">
+    When a customer provides their email in the channel greeting message of the live-chat widget, Chatwoot saves them as a contact.
+  </Card>
+</CardGroup>
+
+## Editing a Contact
+
+To update a contact's information, open their profile and click the **Edit** button. Update any field and save your changes. You can edit the contact's name, email, phone number, company name, location, and any custom attributes.
+
+## Importing Contacts via CSV
+
+Chatwoot supports bulk contact imports from a CSV file, making it easy to migrate an existing customer list.
+
+<Steps>
+  <Step title="Navigate to the Contacts page">
+    Click **Contacts** in the Chatwoot sidebar.
+  </Step>
+  <Step title="Click Import">
+    Click the **Import** button in the top-right corner of the contacts page.
+  </Step>
+  <Step title="Select your CSV file">
+    Choose the CSV file you want to upload. Download the [sample CSV file](https://staging.chatwoot.com/downloads/import-contacts-sample.csv) to see the required column format before importing.
+  </Step>
+  <Step title="Run the import">
+    Click the **Import** button in the dialog to start the upload. Chatwoot processes the file and adds the contacts to your list.
+  </Step>
+</Steps>
+
+<Tip>
+  Use the sample CSV file as a template to ensure your column headers match what Chatwoot expects. Mismatched headers may prevent contacts from importing correctly.
+</Tip>
+
+## Searching Contacts
+
+Use the search bar at the top of the contacts page to find contacts by **name**, **email address**, or **phone number**. Results update as you type.
+
+## Filtering Contacts
+
+For more precise lookups, click the **Filter** button in the top-right corner to apply one or more attribute-based filters. You can combine filters with **AND** / **OR** operators.
+
+Available filter attributes:
+
+<CardGroup cols={3}>
+  <Card title="Contact Name" icon="user" />
+  <Card title="Contact Email" icon="envelope" />
+  <Card title="Phone Number" icon="phone" />
+  <Card title="Contact Identifier" icon="id-badge" />
+  <Card title="Country" icon="globe" />
+  <Card title="City" icon="building" />
+</CardGroup>
+
+**Example:** To find all contacts named "John" who are **not** from the United States:
+
+1. Set filter 1 to **Name** → **Contains** → `John`.
+2. Click **Add Filter**.
+3. Set filter 2 to **Country** → **Not Equal to** → `United States of America`.
+4. Click **Submit**.
+
+To return to the full list, click **Clear Filters** inside the filter panel.
+
+## Contact Labels
+
+Labels help you categorize and segment your contacts. You can assign one or more labels to a contact from their profile page. Labels are also used by [Campaigns](/features/campaigns) to define the audience for one-off SMS messages.
+
+## Adding Notes to a Contact
+
+Chatwoot gives every contact a dedicated notes panel so your team can record important context — a phone call summary, a special request, or any information that doesn't fit in a standard field.
+
+<Steps>
+  <Step title="Open the contact profile">
+    Click the contact's name in the contacts list.
+  </Step>
+  <Step title="Write your note">
+    Type your note in the notes input field on the contact's profile page. You can apply basic formatting: **bold**, *italic*, numbered lists, and bullet lists.
+  </Step>
+  <Step title="Save the note">
+    Click the **Add** button or press `Cmd + Enter` (macOS) / `Ctrl + Enter` (Windows/Linux).
+  </Step>
+</Steps>
+
+To delete a note, click the **delete** icon that appears on the right side of the note entry.
+
+## Starting a New Conversation from a Contact
+
+You can initiate an outbound conversation with any contact directly from their profile page. Chatwoot supports outbound conversations over the following channels:
+
+- **Website** (HMAC-identified contacts only)
+- **Email**
+- **SMS**
+- **WhatsApp**
+
+<Steps>
+  <Step title="Open the contact profile">
+    Navigate to the contact you want to reach.
+  </Step>
+  <Step title="Click the outbound conversation icon">
+    Click the **New Conversation** icon on the contact's profile page.
+  </Step>
+  <Step title="Select an inbox">
+    Choose the inbox (channel) you want to use for the conversation.
+  </Step>
+  <Step title="Write and send your message">
+    Fill in the message content and click **Send**.
+  </Step>
+</Steps>
+
+<Note>
+  When an agent creates an outbound conversation, Chatwoot automatically assigns that conversation to the agent who initiated it.
+</Note>

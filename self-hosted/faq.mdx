@@ -1,0 +1,308 @@
+---
+title: 'Self-Hosted Chatwoot: Frequently Asked Questions (FAQ)'
+sidebarTitle: 'FAQ'
+description: 'Answers to common questions about upgrading, backing up, configuring SSL, custom domains, database migrations, and performance for self-hosted Chatwoot.'
+---
+
+This page collects the most common questions from the Chatwoot self-hosted community. If your question isn't answered here, check the [Chatwoot GitHub Discussions](https://github.com/chatwoot/chatwoot/discussions) or join the [Chatwoot Discord](https://discord.gg/cJXdrwS) where community members and contributors are active.
+
+---
+
+## Upgrades
+
+<AccordionGroup>
+  <Accordion title="How do I upgrade my Chatwoot installation?">
+    The upgrade path depends on how you originally deployed Chatwoot.
+
+    **Linux (using cwctl):**
+    ```bash
+    cwctl --upgrade
+    ```
+
+    **Docker Compose:**
+    ```bash
+    docker compose pull
+    docker compose up -d
+    docker compose run --rm rails bundle exec rails db:chatwoot_prepare
+    ```
+
+    **Kubernetes / Helm:**
+    ```bash
+    helm repo update
+    helm upgrade chatwoot chatwoot/chatwoot -f your-values.yaml
+    ```
+
+    **Heroku:**
+    1. In the **Deploy** tab of your Heroku app dashboard, connect the Chatwoot GitHub repository.
+    2. Under **Manual deploy**, select the `master` branch and click **Deploy Branch**.
+
+    Chatwoot releases a new version around the first Monday of every month, with additional hotfix releases as needed. Watch the [Chatwoot releases page](https://github.com/chatwoot/chatwoot/releases) to stay current.
+  </Accordion>
+
+  <Accordion title="Is it safe to skip versions when upgrading?">
+    Chatwoot generally supports sequential upgrades and does not guarantee compatibility when skipping multiple major versions. It is safest to upgrade one major version at a time. Always review the [changelog](https://github.com/chatwoot/chatwoot/releases) before upgrading, especially when the MAJOR version number changes, as breaking changes may require manual migration steps.
+  </Accordion>
+
+  <Accordion title="The upgrade failed during database migration. What do I do?">
+    If an upgrade fails mid-migration, do not restart the service repeatedly — this can leave the database in an inconsistent state. Instead:
+
+    1. Check the logs for the specific error (`cwctl -l web` or `journalctl -u chatwoot-web.1.service -f`).
+    2. If you are on a Linux install, try running the migration manually:
+       ```bash
+       sudo -i -u chatwoot
+       cd chatwoot
+       RAILS_ENV=production bundle exec rake db:migrate
+       ```
+    3. If assets are failing to compile, clear and recompile them:
+       ```bash
+       RAILS_ENV=production rake assets:clean assets:clobber assets:precompile
+       ```
+    4. If the issue persists, restore your database from the backup you took before upgrading, then file a bug report on GitHub with the exact error output.
+
+    This is why taking a full backup before every upgrade is strongly recommended.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Backups
+
+<AccordionGroup>
+  <Accordion title="What do I need to back up?">
+    A complete Chatwoot backup consists of four things:
+
+    1. **PostgreSQL database** — all conversation data, contacts, agents, and account settings live here.
+    2. **File attachments** — uploaded files stored on local disk or in cloud storage.
+    3. **Environment variables** — your `.env` file or equivalent config vars.
+    4. **Code customizations** — any modifications you have made to the Chatwoot source code (track these with Git).
+  </Accordion>
+
+  <Accordion title="How do I back up the PostgreSQL database?">
+    If you manage Postgres yourself, use `pg_dump`:
+
+    ```bash
+    pg_dump -U postgres -W -F t chatwoot_production > chatwoot_backup.tar
+    ```
+
+    If you are using a managed database service (AWS RDS, Google Cloud SQL, DigitalOcean Managed Postgres, Azure Database), enable automated backups through your provider's console. Most providers support point-in-time recovery and daily snapshot backups.
+
+    Store backups in a separate location from your server — a cloud storage bucket in a different region is ideal.
+  </Accordion>
+
+  <Accordion title="How do I back up uploaded files?">
+    The backup method depends on your `ACTIVE_STORAGE_SERVICE` setting:
+
+    - **`local` storage:** Take a disk snapshot or copy the `storage/` directory in your Chatwoot root to a remote location.
+    - **`amazon` (S3):** Enable S3 versioning and configure S3 cross-region replication or lifecycle policies through the AWS console.
+    - **`google` (GCS):** Use GCS Object Versioning and cross-bucket replication for redundancy.
+    - **`microsoft` (Azure Blob):** Enable Azure Blob soft delete and geo-redundant storage (GRS).
+
+    For production deployments, using a managed cloud storage provider with built-in redundancy is strongly recommended over local disk storage.
+  </Accordion>
+
+  <Accordion title="How often should I back up?">
+    The right frequency depends on how much data your team can afford to lose. For active teams handling customer conversations, daily automated backups are a minimum. Continuous or hourly backups via your managed database provider provide the best protection. Always take a manual backup immediately before performing an upgrade.
+  </Accordion>
+
+  <Accordion title="How do I restore a backup to a new server?">
+    Follow these steps to restore onto a fresh Chatwoot installation:
+
+    1. Deploy a new Chatwoot instance and complete the onboarding flow.
+    2. Restore your environment variables (`.env` file) and ensure configuration values match the backed-up instance.
+    3. Stop Chatwoot services, then drop and restore the PostgreSQL database from your backup:
+       ```bash
+       psql -U postgres -c "DROP DATABASE chatwoot_production;"
+       psql -U postgres -c "CREATE DATABASE chatwoot_production;"
+       pg_restore -U postgres -d chatwoot_production chatwoot_backup.tar
+       ```
+    4. Restore your file storage (copy the `storage/` directory back, or point to the same cloud bucket).
+    5. Restart Chatwoot services and verify functionality.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## SSL and Custom Domains
+
+<AccordionGroup>
+  <Accordion title="How do I set up a custom domain with SSL?">
+    The Linux installer handles this automatically if you enter a domain when prompted. If you need to configure it manually:
+
+    1. Create a DNS **A record** pointing your domain to your server's IP address and wait for it to propagate.
+    2. Install Nginx and configure it as a reverse proxy pointing to `127.0.0.1:3000`.
+    3. Use Certbot to obtain a free Let's Encrypt SSL certificate:
+       ```bash
+       apt install certbot python3-certbot-nginx -y
+       certbot --nginx -d yourdomain.com
+       ```
+    4. Update `FRONTEND_URL` in your `.env` file to your new HTTPS domain and restart Chatwoot.
+
+    See the [Deployment guide](/self-hosted/deployment#step-6--set-up-a-reverse-proxy-with-ssl) for the recommended Nginx configuration block.
+  </Accordion>
+
+  <Accordion title="My SSL certificate is expiring. How do I renew it?">
+    If you used Certbot, renewal is automatic via a systemd timer or cron job created during installation. You can verify auto-renewal works by running:
+
+    ```bash
+    certbot renew --dry-run
+    ```
+
+    If the dry run succeeds, your certificate will renew automatically before it expires. If it fails, check that your domain's DNS still resolves to your server and that port 80 is open (Let's Encrypt requires it for HTTP-01 challenge validation).
+  </Accordion>
+
+  <Accordion title="Do I need to update any setting when I change my domain?">
+    Yes. Update the `FRONTEND_URL` environment variable to your new domain, then restart Chatwoot. Links in notification emails, webhook payloads, and the API all use `FRONTEND_URL` to construct absolute URLs. If you do not update this value, email links will point to the old domain.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Performance
+
+<AccordionGroup>
+  <Accordion title="Chatwoot is slow. Where do I start troubleshooting?">
+    Start by checking whether the bottleneck is the web server or the background worker:
+
+    - Check web server logs: `cwctl -l web` (Linux) or `docker compose logs -f rails` (Docker).
+    - Check worker logs: `cwctl -l worker` or `docker compose logs -f worker`.
+    - Look for slow database queries or connection pool exhaustion in the logs.
+
+    Common causes of slowness:
+    - **Insufficient RAM** — Sidekiq workers can consume 1 GB+ on active servers. Ensure you have at least 4 GB RAM, with swap configured.
+    - **Local file storage** — Local disk I/O under heavy file upload load can bottleneck the app server. Switch to a cloud storage provider.
+    - **Single-server setup at high traffic** — Separate the web server and worker processes onto different machines.
+  </Accordion>
+
+  <Accordion title="How do I scale Chatwoot for higher traffic?">
+    Chatwoot scales horizontally — you can run multiple web server instances behind a load balancer, all pointing at the same PostgreSQL and Redis instances. To scale:
+
+    1. Move PostgreSQL and Redis to dedicated managed services (RDS, ElastiCache, etc.) if you haven't already.
+    2. Run the Chatwoot web process (`rails s`) on additional servers, pointing to the same database and Redis.
+    3. Run one or more dedicated Sidekiq worker servers.
+    4. Put a load balancer (Nginx, HAProxy, or a cloud load balancer) in front of the web servers.
+
+    For Kubernetes deployments, increase the replica count for the web and worker deployments in your Helm values file.
+  </Accordion>
+
+  <Accordion title="How many conversations per day can my server handle?">
+    Chatwoot's hardware requirements guide provides these benchmarks as a starting point:
+
+    | Server Size | Conversations/day |
+    |---|---|
+    | 4 CPU, 4 GB RAM | Up to 10,000 |
+    | 8 CPU, 8 GB RAM | Up to 20,000 |
+    | Multi-server (horizontal scale) | 20,000+ |
+
+    Actual capacity varies based on the number of active agents, inbox types in use (email channels generate more background work than live chat), and the size of attachments being handled.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Database Migrations
+
+<AccordionGroup>
+  <Accordion title="How do I migrate my Chatwoot database to a new server?">
+    Follow these steps to move your database to a new PostgreSQL server:
+
+    1. Take a `pg_dump` backup from the source server:
+       ```bash
+       pg_dump -U postgres -W -F t chatwoot_production > chatwoot_migration.tar
+       ```
+    2. Transfer the backup file to the new server (use `scp` or your preferred secure transfer method).
+    3. On the new server, create the target database and restore:
+       ```bash
+       psql -U postgres -c "CREATE DATABASE chatwoot_production;"
+       pg_restore -U postgres -d chatwoot_production chatwoot_migration.tar
+       ```
+    4. Update the `DATABASE_URL` (or `POSTGRES_HOST`, `POSTGRES_USERNAME`, etc.) environment variables in your `.env` file to point to the new server.
+    5. Restart Chatwoot and verify all data is accessible.
+  </Accordion>
+
+  <Accordion title="Should I use a managed database or run PostgreSQL myself?">
+    For anything beyond testing or a small internal team, a managed PostgreSQL service is strongly recommended. Managed services provide automated daily backups, point-in-time recovery, automatic failover, and security patches — all without requiring database administration expertise. AWS RDS, Google Cloud SQL, DigitalOcean Managed Postgres, and Azure Database for PostgreSQL are all fully compatible with Chatwoot.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Email
+
+<AccordionGroup>
+  <Accordion title="Agent invitation and password reset emails are not being delivered. How do I debug this?">
+    Start by verifying that your SMTP configuration is correct. Open the Rails console and inspect the active SMTP settings:
+
+    **On Linux:**
+    ```bash
+    sudo -i -u chatwoot
+    cd chatwoot
+    RAILS_ENV=production bundle exec rails c
+    ```
+
+    **On Docker:**
+    ```bash
+    docker exec -it $(basename $(pwd))-rails-1 sh -c 'RAILS_ENV=production bundle exec rails c'
+    ```
+
+    Then in the console:
+    ```ruby
+    ActionMailer::Base.smtp_settings
+    ```
+
+    If the settings look correct, try sending a test email directly from the console:
+    ```ruby
+    smtp_settings = {
+      address: 'smtp.yourprovider.com',
+      port: '587',
+      user_name: 'your_username',
+      password: 'your_password',
+      authentication: 'plain',
+      enable_starttls_auto: true
+    }
+
+    mailer = ActionMailer::Base.new
+    mailer.delivery_method = :smtp
+    mailer.smtp_settings = smtp_settings
+    mailer.mail(
+      from: 'sender@yourdomain.com',
+      to: 'recipient@example.com',
+      subject: 'Chatwoot SMTP test',
+      body: 'If you received this, SMTP is working.'
+    ).deliver
+    ```
+
+    If this succeeds, the issue is with your environment variables not being picked up — restart Chatwoot after any `.env` change. If it fails, the error message will identify the configuration problem.
+
+    Also check the Sidekiq worker logs for failed email jobs, since email delivery is processed asynchronously.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Licensing and Usage
+
+<AccordionGroup>
+  <Accordion title="Can I customize the Chatwoot branding on a self-hosted instance?">
+    In the **Community Edition** (MIT License), you can modify branding by editing the source code directly. In the **Enterprise Edition**, custom branding is available as a premium feature included with paid plans — no source code changes are needed.
+  </Accordion>
+
+  <Accordion title="Are there any restrictions on how I can use self-hosted Chatwoot?">
+    The **Community Edition** is released under the MIT License, which permits broad usage including building and reselling derivatives. The Chatwoot team encourages using it as a customer support platform, building custom conversational interfaces on top of it, and enhancing it for specific business niches.
+
+    The **Enterprise Edition** is subject to the [Chatwoot Enterprise License](https://github.com/chatwoot/chatwoot/blob/develop/enterprise/LICENSE). Distributing or selling the Enterprise Edition requires a valid Chatwoot Enterprise subscription with the correct number of user seats.
+
+    Neither edition should be used for anything that isn't permitted by applicable law or that directly competes with Chatwoot's own cloud SaaS offering (e.g., a rebranded Chatwoot hosting service).
+  </Accordion>
+
+  <Accordion title="Where can I get support for my self-hosted installation?">
+    The Chatwoot team provides community support through the following channels:
+
+    | Channel | Best for |
+    |---|---|
+    | [GitHub Issues](https://github.com/chatwoot/chatwoot) | Bug reports, confirmed problems |
+    | [GitHub Discussions](https://github.com/chatwoot/chatwoot/discussions) | Self-hosting questions, feature requests |
+    | [Discord](https://discord.gg/cJXdrwS) | Community help, real-time Q&A |
+
+    The team does not provide one-on-one installation services. When reporting a bug, always include the Chatwoot version you are running (`Settings → About`) and ensure you are on the latest release — the team does not provide fixes for older versions.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,347 @@
+---
+title: 'Deploy Chatwoot Using Docker, Linux, or Cloud Platforms'
+sidebarTitle: 'Deployment'
+description: 'Install Chatwoot on your own server using Docker Compose, the Linux bash installer, or one-click cloud options like DigitalOcean, Heroku, and AWS.'
+---
+
+Chatwoot supports several deployment methods so you can choose the approach that best matches your infrastructure and operations team. Docker Compose is the quickest path for most users; the Linux installer is great when you want the OS-level setup handled for you; and the cloud options reduce setup time even further with one-click templates. All methods produce the same Chatwoot application — pick the one that fits your environment.
+
+<Tabs>
+  <Tab title="Docker Compose">
+
+    ## Docker Compose
+
+    Docker Compose is the recommended approach if you already have a Linux server and are comfortable with containers. The official Chatwoot images are published to Docker Hub and updated with every release.
+
+    ### Prerequisites
+
+    Ensure Docker and the Compose plugin are installed on your server before proceeding. Chatwoot requires Docker 20.10.10 or higher and Docker Compose v2.14.1 or higher.
+
+    ```bash
+    docker --version
+    # Docker version 20.10.10, build b485636
+
+    docker compose version
+    # Docker Compose version v2.14.1
+    ```
+
+    <Note>
+      If you are on an older Docker installation, replace `docker compose` with `docker-compose` and replace dashes with underscores in container names throughout these instructions.
+    </Note>
+
+    ### Step 1 — Install Docker
+
+    Run the following commands on a fresh Ubuntu server to install Docker and the Compose plugin:
+
+    ```bash
+    apt-get update
+    apt-get upgrade -y
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    apt install docker-compose-plugin
+    ```
+
+    ### Step 2 — Download the configuration files
+
+    Download the official environment template and the production Compose file:
+
+    ```bash
+    # Download the environment variable template
+    wget -O .env https://raw.githubusercontent.com/chatwoot/chatwoot/develop/.env.example
+
+    # Download the Docker Compose file
+    wget -O docker-compose.yaml https://raw.githubusercontent.com/chatwoot/chatwoot/develop/docker-compose.production.yaml
+    ```
+
+    ### Step 3 — Configure environment variables
+
+    Open `.env` in your editor and set the required values. At minimum, update the database passwords and your `FRONTEND_URL`. See the [Configuration guide](/self-hosted/configuration) for the full list of variables.
+
+    ```bash
+    # Set your Redis and Postgres passwords, FRONTEND_URL, and SMTP settings
+    nano .env
+
+    # Update the Postgres password in docker-compose.yaml to match .env
+    nano docker-compose.yaml
+    ```
+
+    <Tip>
+      If you are using a managed database (e.g., RDS, Cloud SQL, DigitalOcean Managed Postgres), remove the `postgres` and `redis` services from `docker-compose.yaml` and configure `DATABASE_URL` and `REDIS_URL` in `.env` to point to your managed instances.
+    </Tip>
+
+    ### Step 4 — Prepare the database
+
+    Run the database preparation task before starting the services for the first time:
+
+    ```bash
+    docker compose run --rm rails bundle exec rails db:chatwoot_prepare
+    ```
+
+    ### Step 5 — Start Chatwoot
+
+    Bring all services up in detached mode:
+
+    ```bash
+    docker compose up -d
+    ```
+
+    Verify the application is responding:
+
+    ```bash
+    curl -I localhost:3000/api
+    # HTTP/1.1 200 OK
+    ```
+
+    ### Step 6 — Set up a reverse proxy with SSL
+
+    The Chatwoot container binds to `127.0.0.1:3000` and is not directly exposed to the internet. Set up Nginx as a reverse proxy and use Let's Encrypt for SSL.
+
+    Install Nginx and create a site configuration:
+
+    ```bash
+    apt-get install nginx -y
+    cd /etc/nginx/sites-enabled
+    nano yourdomain.com.conf
+    ```
+
+    Paste the following configuration, replacing `yourdomain.com` with your actual domain:
+
+    ```nginx
+    server {
+      server_name yourdomain.com;
+
+      set $upstream 127.0.0.1:3000;
+
+      # Chatwoot requires underscores in headers
+      underscores_in_headers on;
+
+      location /.well-known {
+        alias /var/www/ssl-proof/chatwoot/.well-known;
+      }
+
+      location / {
+        proxy_pass_header Authorization;
+        proxy_pass http://$upstream;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_buffering off;
+        client_max_body_size 0;
+        proxy_read_timeout 36000s;
+        proxy_redirect off;
+      }
+
+      listen 80;
+    }
+    ```
+
+    Verify and reload Nginx, then provision an SSL certificate:
+
+    ```bash
+    nginx -t
+    systemctl reload nginx
+
+    apt install certbot python3-certbot-nginx -y
+    mkdir -p /var/www/ssl-proof/chatwoot/.well-known
+    certbot --webroot -w /var/www/ssl-proof/chatwoot/ -d yourdomain.com -i nginx
+    ```
+
+    Your Chatwoot installation is now accessible at `https://yourdomain.com`.
+
+    ### Upgrading (Docker)
+
+    Pull the latest images and run database migrations whenever a new Chatwoot version is released:
+
+    ```bash
+    docker compose pull
+    docker compose up -d
+    docker compose run --rm rails bundle exec rails db:chatwoot_prepare
+    ```
+
+    To pin a specific version, update the image tag in `docker-compose.yaml` before pulling. Use the `-ce` tag suffix (e.g., `v3.5.0-ce`) to run the Community Edition.
+
+  </Tab>
+  <Tab title="Linux Script">
+
+    ## Linux Script Installer
+
+    The Linux installer automates the entire setup on Ubuntu 20.04 LTS — it installs Ruby, Node.js, PostgreSQL, Redis, Nginx, and Chatwoot itself, then optionally configures your domain and SSL certificate in one go.
+
+    <Note>
+      If you plan to use a custom domain, create a DNS **A record** pointing your domain to your server's IP address **before** running the installer. The script will configure Nginx and request a Let's Encrypt certificate during setup.
+    </Note>
+
+    ### Step 1 — Download and run the installer
+
+    ```bash
+    wget https://get.chatwoot.app/linux/install.sh
+    chmod +x install.sh
+    ./install.sh --install
+    ```
+
+    The script prompts you for a domain name and handles Nginx and SSL configuration automatically. When it completes, Chatwoot is accessible at `https://your-domain.com` (or `http://<your-ip>:3000` if you skipped the domain setup).
+
+    ### Step 2 — Configure environment variables
+
+    After installation, log in as the `chatwoot` system user and update the `.env` file:
+
+    ```bash
+    sudo -i -u chatwoot
+    cd chatwoot
+    nano .env
+    ```
+
+    Set at minimum `FRONTEND_URL`, your SMTP settings, and your storage configuration. See the [Configuration guide](/self-hosted/configuration) for details. After saving, restart Chatwoot:
+
+    ```bash
+    sudo systemctl restart chatwoot.target
+    ```
+
+    ### Upgrading (Linux)
+
+    The Linux installer also installs the Chatwoot CLI (`cwctl`). Use it to upgrade to the latest release:
+
+    ```bash
+    cwctl --upgrade
+    ```
+
+    If `cwctl` is not in your PATH (installed before Chatwoot v2.7), install it with:
+
+    ```bash
+    wget https://get.chatwoot.app/linux/install.sh -O /usr/local/bin/cwctl
+    chmod +x /usr/local/bin/cwctl
+    ```
+
+    ### Useful CLI commands
+
+    | Command | Description |
+    |---|---|
+    | `cwctl --upgrade` | Upgrade to the latest Chatwoot release |
+    | `cwctl -r` | Restart Chatwoot services |
+    | `cwctl -c` | Open the Rails console |
+    | `cwctl -l web` | Tail web server logs |
+    | `cwctl -l worker` | Tail background worker logs |
+
+  </Tab>
+  <Tab title="DigitalOcean">
+
+    ## DigitalOcean
+
+    You can deploy Chatwoot on DigitalOcean in two ways: a standard VM (Droplet) running the Linux installer, or the 1-click Kubernetes application from the DigitalOcean Marketplace.
+
+    ### Option A — Droplet (VM)
+
+    1. Log in to the DigitalOcean console and click **Create Droplet**.
+    2. Select the **Ubuntu 20.04** image.
+    3. Choose a Droplet size with at least **4 vCPUs and 8 GB RAM**.
+    4. Select your preferred datacenter region.
+    5. Add your SSH key for authentication, then click **Create**.
+    6. SSH into the new Droplet and follow the [Linux Script](#linux-script) instructions above.
+
+    Once the installer finishes, your instance is available at `http://<droplet-ip>:3000`, or at your domain if you configured DNS and SSL during setup.
+
+    ### Option B — 1-Click Kubernetes App
+
+    For a cloud-native deployment with horizontal scaling, use the [Chatwoot app on the DigitalOcean Marketplace](https://marketplace.digitalocean.com/apps/chatwoot). This deploys Chatwoot on a managed Kubernetes cluster and wires up a load balancer automatically.
+
+    After the app is deployed, configure your environment variables through the Kubernetes secret or your values YAML file and follow the [Kubernetes / Helm upgrade path](#kubernetes) for future updates.
+
+  </Tab>
+  <Tab title="Heroku">
+
+    ## Heroku
+
+    Heroku's one-click deploy button provisions a Chatwoot app with web and worker dynos, a Postgres add-on, and a Redis add-on in a few minutes.
+
+    <Warning>
+      Heroku no longer offers free dynos, Postgres, or Redis. All new Heroku deployments use paid plans. Review [Heroku's current pricing](https://www.heroku.com/pricing) before deploying.
+    </Warning>
+
+    ### Deploy
+
+    1. Click the [one-click deploy button](https://heroku.com/deploy?template=https://github.com/chatwoot/chatwoot/tree/master) to launch the Heroku setup wizard.
+    2. Complete the app name and region fields, then click **Deploy app**.
+    3. After the deploy finishes, go to the **Resources** tab in your app dashboard and ensure the **worker** dyno is turned **on** (it is off by default).
+    4. Go to the **Settings** tab, click **Reveal Config Vars**, and add your [SMTP configuration](/self-hosted/configuration#email-delivery) and [storage configuration](/self-hosted/configuration#file-storage).
+    5. Visit `https://your-app-name.herokuapp.com` to complete onboarding.
+
+    ### Important Limitations
+
+    <AccordionGroup>
+      <Accordion title="Ephemeral filesystem">
+        Heroku dynos use an ephemeral filesystem — any files written to local disk are lost when the dyno restarts. You **must** configure a cloud storage provider (S3, GCS, or Azure) via environment variables. Do not use `ACTIVE_STORAGE_SERVICE=local` on Heroku.
+      </Accordion>
+      <Accordion title="Dyno sleeping">
+        If you are on a lower-tier plan and your app receives no traffic for a period of time, Heroku may put your dynos to sleep. Upgrade to a standard or performance dyno to keep your instance always-on.
+      </Accordion>
+    </AccordionGroup>
+
+    ### Upgrading (Heroku)
+
+    1. In the Heroku **Deploy** tab, connect the Chatwoot GitHub repository to your app.
+    2. Under **Manual deploy**, select the `master` branch and click **Deploy Branch**.
+
+  </Tab>
+  <Tab title="AWS">
+
+    ## Amazon Web Services
+
+    ### Option A — EC2 (Manual)
+
+    1. Launch an EC2 instance running **Ubuntu 20.04** with at least 4 vCPUs and 8 GB RAM.
+    2. Open port 80 and 443 in your security group.
+    3. SSH into the instance and follow the [Linux Script](#linux-script) installer steps above.
+
+    For production workloads, consider using **Amazon RDS** for PostgreSQL and **Amazon ElastiCache** for Redis instead of running these services on the same EC2 instance. Configure the `DATABASE_URL` and `REDIS_URL` environment variables to point to your managed services.
+
+    ### Option B — AWS Marketplace
+
+    The [Chatwoot listing on the AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-wi4tqpxpwxuvq) provides a pre-configured AMI. Launch the AMI from the Marketplace, then SSH in and run `cwctl --upgrade` to pull the latest Chatwoot version.
+
+    ### Storage on AWS
+
+    Use Amazon S3 for file attachments. Set `ACTIVE_STORAGE_SERVICE=amazon` along with your bucket name and IAM credentials. See [File Storage](/self-hosted/configuration#file-storage) for the full variable list.
+
+  </Tab>
+  <Tab title="Kubernetes">
+
+    ## Kubernetes (Helm)
+
+    The official Chatwoot Helm chart deploys all required services to any Kubernetes cluster, including the DigitalOcean 1-click app.
+
+    ### Install
+
+    ```bash
+    helm repo add chatwoot https://chatwoot.github.io/charts
+    helm repo update
+    helm install chatwoot chatwoot/chatwoot -f your-values.yaml
+    ```
+
+    Create a `your-values.yaml` file to set your environment variables, resource limits, replica counts, and ingress configuration. Refer to the [chart documentation](https://github.com/chatwoot/charts) for the full list of configurable values.
+
+    ### Upgrading (Kubernetes)
+
+    ```bash
+    helm repo update
+
+    # Check the current installed version
+    helm list
+
+    # Check the latest available chart version
+    helm search repo chatwoot
+
+    # Upgrade — review the changelog if the MAJOR version has changed
+    helm upgrade chatwoot chatwoot/chatwoot -f your-values.yaml
+    ```
+
+    <Warning>
+      If the chart's MAJOR version has changed, review the [Chatwoot changelog](https://github.com/chatwoot/chatwoot/releases) for breaking changes before running `helm upgrade`.
+    </Warning>
+
+  </Tab>
+</Tabs>

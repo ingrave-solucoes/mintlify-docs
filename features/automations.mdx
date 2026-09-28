@@ -1,0 +1,136 @@
+---
+title: 'Automate Your Support Workflow in Chatwoot'
+sidebarTitle: 'Automations'
+description: 'Use Chatwoot automations to eliminate repetitive tasks, route conversations, assign labels, and notify teams automatically based on rules you define.'
+---
+
+Chatwoot automations let you define rules that run in the background so your team can spend less time on manual tasks and more time helping customers. Each rule watches for a specific trigger, checks a set of conditions, and then executes one or more actions — all without any agent intervention.
+
+## How Automations Work
+
+Every automation rule is built around three components: an **Event**, one or more **Conditions**, and one or more **Actions**.
+
+<Steps>
+  <Step title="Event">
+    The trigger that fires the rule — for example, a new conversation being created.
+  </Step>
+  <Step title="Conditions">
+    Criteria evaluated after the event fires. The action only runs when all (or any) conditions are met.
+  </Step>
+  <Step title="Actions">
+    Tasks Chatwoot executes automatically when the conditions pass — such as assigning a label or notifying a team.
+  </Step>
+</Steps>
+
+## Supported Events
+
+<CardGroup cols={3}>
+  <Card title="Conversation Created" icon="comment-plus">
+    Fires whenever a new conversation is opened, regardless of which channel it came from.
+  </Card>
+  <Card title="Conversation Updated" icon="comment-dots">
+    Fires whenever an existing conversation's attributes change — for example, its status, assignee, or team.
+  </Card>
+  <Card title="Message Created" icon="message">
+    Fires whenever a new message is added to any conversation, whether from a customer or an agent.
+  </Card>
+</CardGroup>
+
+## Supported Conditions
+
+The conditions available depend on which event you select.
+
+| Condition | Conversation Created | Conversation Updated | Message Created |
+|---|:---:|:---:|:---:|
+| Conversation Status | ✓ | ✓ | |
+| Browser Language | ✓ | ✓ | |
+| Country | ✓ | ✓ | |
+| Referrer Link | ✓ | ✓ | |
+| Assignee | | ✓ | |
+| Team | | ✓ | |
+| Message Type | | | ✓ |
+| Message Contains | | | ✓ |
+
+You can combine multiple conditions using the **AND** operator (all conditions must be true) or the **OR** operator (any condition must be true).
+
+## Supported Actions
+
+<AccordionGroup>
+  <Accordion title="Assign a Team">
+    Routes the conversation to a specific support team so it appears in that team's queue.
+  </Accordion>
+  <Accordion title="Assign a Label">
+    Attaches one or more labels to the conversation for easier filtering and reporting.
+  </Accordion>
+  <Accordion title="Send Email to a Team">
+    Sends an email notification to a team, useful for escalations or urgent alerts.
+  </Accordion>
+</AccordionGroup>
+
+## Creating an Automation Rule
+
+Follow these steps to create your first automation.
+
+<Steps>
+  <Step title="Open the Automations page">
+    Click the **Settings** icon in the Chatwoot sidebar, then select **Automations** from the menu.
+  </Step>
+  <Step title="Start a new rule">
+    Click the **+ Add Automation Rule** button to open the creation modal.
+  </Step>
+  <Step title="Name and describe your rule">
+    Enter a clear **Name** for the rule. Add an optional **Description** to help teammates understand its purpose.
+  </Step>
+  <Step title="Choose an event">
+    Select one of the three supported events — **Conversation Created**, **Conversation Updated**, or **Message Created** — from the **Event** dropdown.
+  </Step>
+  <Step title="Add conditions">
+    Click **Add Condition** to add your first condition. Select the attribute, operator, and value. Add more conditions as needed and choose **AND** or **OR** to link them.
+  </Step>
+  <Step title="Add actions">
+    Click **Add Action** and select the task to perform. You can stack multiple actions in a single rule.
+  </Step>
+  <Step title="Save the rule">
+    Click **Save** to activate the automation. It will run immediately for all matching future events.
+  </Step>
+</Steps>
+
+### Example: Route French-Language Conversations to the France Sales Team
+
+Here is a practical example that automatically assigns newly opened French-language conversations to a dedicated team.
+
+<Steps>
+  <Step title="Set the event">
+    Select **Conversation Created**.
+  </Step>
+  <Step title="Add two conditions joined by AND">
+    - Condition 1: **Conversation Status** → **Equal to** → **Open**
+    - Condition 2: **Browser Language** → **Equal to** → **Français (fr)**
+  </Step>
+  <Step title="Add the action">
+    Select **Assign a Team** and choose **France Sales** from the team dropdown.
+  </Step>
+  <Step title="Save">
+    Click **Save**. Every new open conversation from a French-language browser will now be routed to the France Sales team.
+  </Step>
+</Steps>
+
+<Note>
+  You must create the target team in **Settings → Teams** before you can select it in an automation action.
+</Note>
+
+## Editing an Automation Rule
+
+To update an existing rule, click the **Edit** (pencil) icon next to it in the automations list. The same modal used for creation will open with the current values pre-filled. Make your changes and click **Save**.
+
+## Cloning an Automation Rule
+
+To duplicate a rule, click the **Clone** icon next to the automation you want to copy. Chatwoot creates an exact replica — including all conditions and actions — which you can then edit independently. This is useful when you need similar rules for different teams or inboxes.
+
+## Deleting an Automation Rule
+
+To remove a rule, click the **Delete** icon next to it in the automations list.
+
+<Warning>
+  Deleting an automation is permanent and cannot be undone. The rule will stop running immediately.
+</Warning>

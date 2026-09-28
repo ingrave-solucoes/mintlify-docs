@@ -1,0 +1,139 @@
+---
+title: 'Integrate Telegram and Line Channels in Chatwoot'
+sidebarTitle: 'Telegram & Line'
+description: 'Connect a Telegram bot and a Line Messaging API channel to Chatwoot — get your tokens from each platform and create an inbox in minutes.'
+---
+
+Chatwoot supports two additional messaging platforms popular in many regions: **Telegram** and **Line**. Both use a bot-based model where you create a bot on the respective platform, obtain a token or set of credentials, and paste them into Chatwoot to link the inbox. Once connected, incoming messages from users appear as conversations in your Chatwoot dashboard, and your agents can reply directly from there.
+
+---
+
+## Telegram
+
+Telegram integration works through the Telegram Bot API. You create a bot with Telegram's official **BotFather** tool, copy the API token, and paste it into Chatwoot.
+
+### Prerequisites
+
+You need a Telegram account and access to [BotFather](https://telegram.me/BotFather) — Telegram's built-in bot management tool.
+
+### Steps
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    In Chatwoot, go to **Settings → Inboxes → Add Inbox** and click the **Telegram** icon.
+  </Step>
+  <Step title="Create a bot with BotFather">
+    Open Telegram and start a chat with [@BotFather](https://telegram.me/BotFather). Send the `/newbot` command and follow the prompts to:
+    1. Choose a display name for your bot (e.g., `Acme Support`)
+    2. Choose a username ending in `bot` (e.g., `acme_support_bot`)
+
+    BotFather responds with your bot's **API token** — a long string that looks like `123456789:ABCdef...`. Copy it.
+  </Step>
+  <Step title="Enter the API token in Chatwoot">
+    Paste the API token into the **Bot API Token** field and click **Create Telegram Channel**.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox and click **Add Agents**. Your Telegram inbox is now active.
+  </Step>
+  <Step title="Verify the inbox name">
+    Go to **Settings → Inboxes → (your Telegram inbox) → Settings** and confirm that the inbox name matches the bot username you set in BotFather. If they differ, update the inbox name to match.
+  </Step>
+</Steps>
+
+### Test the Integration
+
+1. Open Telegram and search for your bot by its username.
+2. Send it a message.
+3. Open your Chatwoot dashboard — the message should appear as a new conversation in the Telegram inbox within seconds.
+
+### Telegram Channel Capabilities
+
+| Feature | Support |
+|---|---|
+| Incoming / outgoing messages | ✅ |
+| Attachments | ✅ |
+| Channel greeting | ✅ |
+| Agent auto-assignment | ✅ |
+| CSAT surveys | ❌ |
+| Template messages | ❌ |
+
+<Note>
+  Your bot must be publicly searchable on Telegram for customers to find it. BotFather enables this by default when you create a new bot. Make sure you have not disabled the bot's **Allow Groups** or **Privacy Mode** settings in ways that prevent users from starting a conversation.
+</Note>
+
+---
+
+## Line
+
+Line is a messaging platform with hundreds of millions of users, particularly in Japan, Thailand, and Taiwan. Chatwoot connects to Line through the **Line Messaging API** using credentials from the Line Developer Console.
+
+### Prerequisites
+
+You need a [Line Developer account](https://developers.line.biz/console) and a Line Business account. If you do not have one yet, sign up at the Line Developer Console.
+
+### Steps
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    In Chatwoot, go to **Settings → Inboxes → Add Inbox** and click the **Line** icon.
+  </Step>
+  <Step title="Create a Provider in the Line Developer Console">
+    Go to the [Line Developer Console](https://developers.line.biz/console), log in, and create a new **Provider** (this represents your company or app).
+  </Step>
+  <Step title="Create a Messaging API channel">
+    Inside your Provider, click **Create a new channel** and select **Messaging API**. Complete the setup form with your channel details. This creates the bot that Line users will interact with.
+  </Step>
+  <Step title="Gather your credentials">
+    From the **Messaging API** channel settings page, collect these four values:
+
+    | Credential | Where to Find It |
+    |---|---|
+    | Channel Name | The display name of your Line Messaging API channel |
+    | LINE Channel ID | Shown on the **Basic settings** tab of your channel |
+    | LINE Channel Secret | Shown on the **Basic settings** tab (click **Issue** if not already generated) |
+    | LINE Channel Token | Shown on the **Messaging API** tab → **Channel access token** (click **Issue** to generate) |
+  </Step>
+  <Step title="Enter credentials in Chatwoot">
+    Fill in all four fields in the Chatwoot setup form and click **Create LINE Channel**.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox and click **Add Agents**. Your Line inbox is created.
+  </Step>
+  <Step title="Configure the webhook in Line Developer Console">
+    Return to the **Messaging API** tab of your Line channel. Under **Webhook settings**:
+    1. Enter the **Webhook URL** provided by Chatwoot (shown at the end of inbox creation, or in the inbox settings).
+    2. Click **Verify** to confirm the connection is working.
+    3. Toggle **Use webhook** to **Enabled**.
+  </Step>
+</Steps>
+
+### Test the Integration
+
+1. Add your Line bot as a friend using its QR code from the Messaging API tab.
+2. Send it a message in the Line app.
+3. Open your Chatwoot dashboard — the message should appear as a new conversation in your Line inbox.
+
+### Line Channel Capabilities
+
+| Feature | Support |
+|---|---|
+| Incoming / outgoing messages | ✅ |
+| Attachments | ✅ |
+| Channel greeting | ✅ |
+| Agent auto-assignment | ✅ |
+| CSAT surveys | ❌ |
+| Template messages | ❌ |
+
+<Tip>
+  Line requires the webhook to be enabled and verified before messages start flowing into Chatwoot. If you complete the inbox setup but do not see incoming messages, return to the Line Developer Console and confirm that the **Use webhook** toggle is on and the webhook URL verification passed.
+</Tip>
+
+---
+
+## Additional Inbox Settings
+
+Both Telegram and Line inboxes share the same additional settings available on other Chatwoot channels. Click the **gear icon** next to any inbox in **Settings → Inboxes** to configure:
+
+- **Greeting Message** — sent automatically when a new conversation starts
+- **Business Hours** — define working windows and configure an offline message
+- **Collaborators** — add or remove agents and toggle automatic conversation assignment

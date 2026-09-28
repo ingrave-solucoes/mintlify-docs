@@ -1,0 +1,175 @@
+---
+title: 'Chatwoot REST API: Authentication and Usage Guide'
+sidebarTitle: 'API Overview'
+description: 'Learn how to authenticate with the Chatwoot REST API, pass your access token, handle pagination, and interpret error responses.'
+---
+
+The Chatwoot REST API gives you programmatic access to every resource in your account — conversations, contacts, messages, inboxes, agents, and more. Whether you are building a custom integration, automating support workflows, or extending the Chatwoot dashboard, you interact with the same HTTP-based API that the Chatwoot web application uses itself.
+
+## Base URL
+
+All API endpoints are relative to the following base URL:
+
+```
+https://app.chatwoot.com/api/v1
+```
+
+If you are running a self-hosted Chatwoot installation, replace `https://app.chatwoot.com` with your own domain. Keep `/api/v1` as the path prefix — this is the current stable API version.
+
+<Info>
+  The API version is embedded in the URL path. When Chatwoot introduces a breaking change, the version number increments (e.g. `/api/v2`). Always check the [changelog](https://www.chatwoot.com/changelog) before upgrading.
+</Info>
+
+## Get Your API Access Token
+
+Every API request must be authenticated. Chatwoot uses a personal API access token tied to your user account.
+
+<Steps>
+  <Step title="Open Profile Settings">
+    Click your avatar in the bottom-left corner of the Chatwoot dashboard, then select **Profile Settings**.
+  </Step>
+  <Step title="Copy your Access Token">
+    Scroll to the **Access Token** section at the bottom of the page. Click **Copy** to copy the token to your clipboard.
+  </Step>
+</Steps>
+
+<Warning>
+  Treat your access token like a password. Do not commit it to source control or expose it in client-side code. Regenerate it immediately from Profile Settings if you suspect it has been compromised.
+</Warning>
+
+## Authenticate Your Requests
+
+You can pass your access token in one of two ways on every request.
+
+### Option 1 — Query Parameter
+
+Append `api_access_token` as a query string parameter:
+
+```
+GET https://app.chatwoot.com/api/v1/profile?api_access_token=YOUR_TOKEN
+```
+
+### Option 2 — Authorization Header (Recommended)
+
+Pass the token in the `api_access_token` header:
+
+```
+api_access_token: YOUR_TOKEN
+```
+
+<Tip>
+  Prefer the header approach in production. Query parameters can be logged by proxies and web servers, which risks exposing your token in plain-text logs.
+</Tip>
+
+### Example: Fetch Your Profile with cURL
+
+```bash
+curl --request GET \
+  --url https://app.chatwoot.com/api/v1/profile \
+  --header 'api_access_token: YOUR_TOKEN'
+```
+
+A successful response returns a `200 OK` with your profile object:
+
+```json
+{
+  "id": 1,
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "access_token": "YOUR_TOKEN"
+}
+```
+
+## API Versioning
+
+Chatwoot uses URL-based versioning. The current production version is **v1**. The API follows [Semantic Versioning](https://semver.org/) principles:
+
+| Version | Status | Notes |
+|---------|--------|-------|
+| `v1` | **Stable** | Recommended for all integrations |
+
+Non-breaking additions (new fields, new endpoints) are added without a version bump. Breaking changes always introduce a new version.
+
+## Rate Limits
+
+Chatwoot applies rate limits to protect platform stability.
+
+<ResponseField name="X-RateLimit-Limit" type="integer">
+  The maximum number of requests allowed per window.
+</ResponseField>
+
+<ResponseField name="X-RateLimit-Remaining" type="integer">
+  The number of requests remaining in the current window.
+</ResponseField>
+
+<ResponseField name="X-RateLimit-Reset" type="integer">
+  The Unix timestamp at which the current rate-limit window resets.
+</ResponseField>
+
+When you exceed the limit, the API returns `429 Too Many Requests`. Implement exponential back-off and retry after the value indicated by `X-RateLimit-Reset`.
+
+## Pagination
+
+List endpoints return paginated results. Use the `page` query parameter to navigate through pages. Each page returns up to **25** records by default.
+
+```
+GET /api/v1/accounts/{account_id}/conversations?page=2
+```
+
+<ParamField query="page" type="integer" default="1">
+  The page number to retrieve. Starts at `1`.
+</ParamField>
+
+Responses include a `data` object with `meta` and `payload` keys:
+
+```json
+{
+  "data": {
+    "meta": {
+      "all_count": 120,
+      "unassigned_count": 5,
+      "assigned_count": 115,
+      "current_page": 2
+    },
+    "payload": [...]
+  }
+}
+```
+
+## Error Codes
+
+The Chatwoot API uses standard HTTP status codes to signal success or failure.
+
+| Code | Meaning | Common Cause |
+|------|---------|--------------|
+| `200 OK` | Success | Request processed normally |
+| `201 Created` | Resource created | `POST` request succeeded |
+| `400 Bad Request` | Invalid input | Missing or malformed parameters |
+| `401 Unauthorized` | Auth failed | Missing or invalid `api_access_token` |
+| `403 Forbidden` | Permission denied | Token lacks access to the resource |
+| `404 Not Found` | Resource missing | Wrong ID or account mismatch |
+| `422 Unprocessable Entity` | Validation error | Parameter value violates a constraint |
+| `429 Too Many Requests` | Rate limited | Slow down and retry after reset |
+| `500 Internal Server Error` | Server fault | Retry; if persistent, contact support |
+
+Error responses include a JSON body with a human-readable description:
+
+```json
+{
+  "error": "Invalid credentials"
+}
+```
+
+Or for validation errors:
+
+```json
+{
+  "errors": {
+    "email": ["has already been taken"]
+  }
+}
+```
+
+## Full API Reference
+
+Explore every available endpoint in the interactive API reference at [chatwoot.com/developers/api](https://www.chatwoot.com/developers/api). You can try requests directly from your browser using your access token.

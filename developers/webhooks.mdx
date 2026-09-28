@@ -1,0 +1,177 @@
+---
+title: 'Set Up Webhooks to Receive Chatwoot Events'
+sidebarTitle: 'Webhooks'
+description: 'Create webhook endpoints, subscribe to Chatwoot events, understand the payload structure, and handle delivery retries reliably.'
+---
+
+Webhooks let Chatwoot push real-time notifications to your server the moment something happens in your account — a new message arrives, a conversation is resolved, or a contact opens the live-chat widget. Instead of polling the API, your server receives an HTTP `POST` request with a structured JSON payload as soon as the event fires.
+
+## How Webhooks Work
+
+When a subscribed event occurs in Chatwoot, the platform sends a `POST` request to every webhook URL registered on that account. Your endpoint receives the request, processes the payload, and should respond with a `2xx` HTTP status code to acknowledge delivery. You can register multiple webhook URLs per account, which is useful for sending events to several downstream services simultaneously.
+
+## Create a Webhook
+
+<Steps>
+  <Step title="Navigate to Integrations">
+    In the Chatwoot dashboard, click **Settings** in the sidebar, then select **Integrations**. Locate the **Webhooks** card and click **Configure**.
+  </Step>
+  <Step title="View existing webhooks">
+    The page displays all webhook URLs currently registered on your account. Review the list to avoid creating duplicates.
+  </Step>
+  <Step title="Add a new webhook">
+    Click **Add new webhook**. A modal dialog appears where you provide:
+
+    - **URL** — the HTTPS endpoint on your server that will receive `POST` requests.
+    - **Subscriptions** — the specific event types you want to receive (see below).
+
+    Select only the events your integration needs. Limiting subscriptions reduces unnecessary traffic to your server.
+  </Step>
+  <Step title="Save">
+    Click **Create** to register the webhook. Chatwoot immediately begins sending matching events to your URL.
+  </Step>
+</Steps>
+
+<Note>
+  Your webhook URL must be publicly reachable over HTTPS. Chatwoot does not send events to `localhost` or private IP addresses. During development, use a tunneling tool such as [ngrok](https://ngrok.com) to expose a local port.
+</Note>
+
+## Available Events
+
+When creating or editing a webhook, select any combination of the following event types:
+
+| Event | Triggered when |
+|-------|---------------|
+| `message_created` | A new message is created in any conversation |
+| `message_updated` | An existing message is updated |
+| `conversation_created` | A new conversation is opened |
+| `conversation_updated` | Any attribute on a conversation changes |
+| `conversation_status_changed` | A conversation moves to `open`, `resolved`, or `pending` |
+| `webwidget_triggered` | A contact opens the live-chat web widget |
+| `contact_created` | A new contact record is created |
+| `contact_updated` | A contact record is updated |
+
+<Tip>
+  Subscribe to `message_created` if you want to react to every inbound customer message — for example, to trigger an auto-responder or log messages to a CRM.
+</Tip>
+
+## Webhook Payload Structure
+
+Every webhook request is a `POST` with a `Content-Type: application/json` header. The body always contains an `event` field that identifies the event type, followed by the attributes of the resource that triggered it.
+
+### Sample Payload — `message_created`
+
+```json
+{
+  "event": "message_created",
+  "id": "1",
+  "content": "Hi",
+  "created_at": "2020-03-03 13:05:57 UTC",
+  "message_type": "incoming",
+  "content_type": "text",
+  "content_attributes": {},
+  "source_id": "",
+  "sender": {
+    "id": "1",
+    "name": "Agent",
+    "email": "agent@example.com"
+  },
+  "contact": {
+    "id": "1",
+    "name": "contact-name"
+  },
+  "conversation": {
+    "display_id": "1",
+    "additional_attributes": {
+      "browser": {
+        "device_name": "Macbook",
+        "browser_name": "Chrome",
+        "platform_name": "Macintosh",
+        "browser_version": "80.0.3987.122",
+        "platform_version": "10.15.2"
+      },
+      "referer": "http://www.chatwoot.com",
+      "initiated_at": "Tue Mar 03 2020 18:37:38 GMT-0700 (Mountain Standard Time)"
+    }
+  },
+  "account": {
+    "id": "1",
+    "name": "Chatwoot"
+  }
+}
+```
+
+### Top-Level Payload Fields
+
+<ResponseField name="event" type="string" required>
+  The name of the event, e.g. `message_created`, `conversation_created`. Use this field to route incoming webhooks to the correct handler in your code.
+</ResponseField>
+
+<ResponseField name="id" type="string">
+  The ID of the primary resource associated with the event (e.g. the message ID for `message_created`).
+</ResponseField>
+
+<ResponseField name="content" type="string">
+  The text content of the message. Present on `message_created` and `message_updated` events.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  ISO 8601 timestamp indicating when the resource was created.
+</ResponseField>
+
+<ResponseField name="message_type" type="string">
+  Direction of the message. One of `incoming` (sent by the contact), `outgoing` (sent by the agent), or `template` (interactive message).
+</ResponseField>
+
+<ResponseField name="content_type" type="string">
+  The type of message content. One of `text`, `input_select`, `cards`, `form`, or `article`. Defaults to `text`.
+</ResponseField>
+
+<ResponseField name="content_attributes" type="object">
+  Additional structured data for rich content types. See [Interactive Messages](/developers/interactive-messages) for the full schema.
+</ResponseField>
+
+<ResponseField name="sender" type="object">
+  The agent or user who sent the message. Contains `id`, `name`, and `email`.
+</ResponseField>
+
+<ResponseField name="contact" type="object">
+  The customer contact associated with the event. Contains `id` and `name`.
+</ResponseField>
+
+<ResponseField name="conversation" type="object">
+  The conversation the event belongs to. Contains `display_id` and `additional_attributes` such as browser information and referrer URL.
+</ResponseField>
+
+<ResponseField name="account" type="object">
+  The Chatwoot account the event originated from. Contains `id` and `name`.
+</ResponseField>
+
+## Verifying Webhook Delivery
+
+After saving a webhook, Chatwoot sends a verification-style `POST` to confirm the endpoint is reachable. Your server should respond with a `200 OK` (or any `2xx` status) as quickly as possible — ideally within **5 seconds**. Move any time-intensive processing to a background job and acknowledge immediately.
+
+To confirm a webhook is working:
+
+1. Trigger the subscribed event manually (e.g. send a test message in a conversation).
+2. Check your server logs for an inbound `POST` from Chatwoot's IP range.
+3. Inspect the `event` field to confirm the correct event type was delivered.
+
+<Warning>
+  If your endpoint returns a non-`2xx` response or times out, Chatwoot marks the delivery as failed. Check your server logs for errors such as unhandled exceptions or SSL certificate issues.
+</Warning>
+
+## Delivery Retries
+
+Chatwoot automatically retries failed webhook deliveries using exponential back-off. If your server is temporarily unavailable, deliveries are reattempted over a window of time before being abandoned.
+
+To minimise missed events:
+
+- Return `200 OK` immediately and process the payload asynchronously.
+- Make your webhook handler **idempotent** — use the resource `id` and `event` fields to deduplicate re-delivered events.
+- Monitor your server's error rate and uptime so you catch failures early.
+
+## Next Steps
+
+- Review all supported event types and their full payload schemas in [Webhook Events](/developers/webhook-events).
+- To receive real-time updates without polling or public endpoints, explore WebSocket events via the Chatwoot API.

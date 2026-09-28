@@ -1,0 +1,211 @@
+---
+title: 'Build Agent Bots to Automate Conversations'
+sidebarTitle: 'Agent Bots'
+description: 'Create agent bots in Chatwoot to automate triage, send replies, handle handoffs to human agents, and integrate with AI services.'
+---
+
+Agent bots let you connect your own automated logic directly to Chatwoot inboxes. Once you attach a bot to an inbox, Chatwoot assigns all new conversations a `pending` status and forwards every conversation event to your bot's webhook URL. Your bot reads the event, decides how to respond, and calls the Chatwoot API to post a reply, update conversation metadata, or hand the conversation off to a human agent — all without any manual intervention. This model makes Chatwoot a powerful front-end for AI assistants, intent-detection engines (Dialogflow, Rasa, Amazon Lex), or custom rule-based bots.
+
+## What Agent Bots Can Do
+
+Your bot service can react to any of the following scenarios:
+
+- **Triage and qualify** — ask a series of questions and collect the customer's issue category, order number, or contact details before routing to the right team.
+- **Answer FAQs automatically** — integrate with a knowledge base or language model to reply instantly to common questions 24/7.
+- **Pull live data** — call third-party APIs (order management, booking systems, CRMs) and surface that data as a Chatwoot message.
+- **Send rich content** — use [Interactive Messages](/developers/interactive-messages) to display product cards, option pickers, and forms inside the widget.
+- **Hand off to a human** — toggle the conversation status to `open` when the bot cannot resolve the issue, routing it to a live agent.
+- **Continue assisting agents** — after handoff, keep listening to the open conversation and provide the agent with contextual suggestions.
+
+## Bot Scopes: Global vs. Account
+
+Chatwoot supports two scopes for agent bots:
+
+| Type | Scope | Best for |
+|------|-------|---------|
+| **Global Bot** | All accounts on the installation | Self-hosted platforms with multiple tenants |
+| **Account Bot** | A single Chatwoot account | SaaS integrations scoped to one team |
+
+## Create an Agent Bot
+
+You can create a bot via the Chatwoot API or directly through the Rails console on a self-hosted installation.
+
+### Via the API
+
+- **Global Bots** — use the [Agent Bot API](https://www.chatwoot.com/developers/api/#tag/AgentBots). Requires super-admin privileges.
+- **Account Bots** — use the [Account Agent Bot API](https://www.chatwoot.com/developers/api/#tag/Account-AgentBots). Requires account-admin privileges.
+
+Both endpoints accept a `name` and an `outgoing_url` (your bot's webhook endpoint).
+
+### Via Rails Console (Self-Hosted)
+
+If you manage your own Chatwoot installation, open a Rails console and run:
+
+```bash
+bundle exec rails c
+```
+
+Then create the bot and retrieve its access token:
+
+```ruby
+# Pass account_id: <id> to create an account-scoped bot instead
+bot = AgentBot.create!(name: "My Support Bot", outgoing_url: "https://bot.example.com/webhook")
+bot.access_token.token   # Save this token — you'll need it to call Chatwoot APIs
+```
+
+Optionally attach an avatar:
+
+```ruby
+avatar_file = Down.download("https://example.com/bot-avatar.png")
+bot.avatar.attach(
+  io: avatar_file,
+  filename: avatar_file.original_filename,
+  content_type: avatar_file.content_type
+)
+```
+
+Connect the bot to an inbox:
+
+```ruby
+# Replace Inbox.first with Inbox.find(inbox_id) for a specific inbox
+AgentBotInbox.create!(inbox: Inbox.first, agent_bot: bot)
+```
+
+<Warning>
+  Save the access token returned by `bot.access_token.token` immediately — you cannot retrieve it again from the console. You use this token as the `api_access_token` when calling Chatwoot APIs from your bot service.
+</Warning>
+
+## The Bot Webhook Handshake
+
+Once a bot is attached to an inbox, Chatwoot sends a `POST` request to your `outgoing_url` for every conversation event in that inbox. Your service must:
+
+1. Accept `POST` requests at the configured URL.
+2. Parse the JSON body to identify the event type.
+3. Return a `200 OK` response within **5 seconds** to acknowledge receipt.
+4. Process the event and call Chatwoot APIs asynchronously if needed.
+
+Chatwoot sends the same event payload structure used by webhooks. The most important events for bot logic are:
+
+| Event | Fires when |
+|-------|-----------|
+| `message_created` | A contact sends a new message |
+| `message_updated` | A message is edited |
+| `conversation_created` | A new conversation is opened |
+| `conversation_status_changed` | A conversation status changes (e.g. agent sets it back to `pending`) |
+
+## Handle Incoming Events
+
+The following example shows a minimal Node.js/Express bot server that receives events and routes them by type:
+
+```js
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+app.post('/webhook', async (req, res) => {
+  // Acknowledge immediately — always respond before processing
+  res.sendStatus(200);
+
+  const { event, content, conversation } = req.body;
+
+  if (event === 'message_created' && req.body.message_type === 'incoming') {
+    const conversationId = conversation?.id;
+    const accountId = req.body.account?.id;
+
+    // Route to your bot logic
+    await handleIncomingMessage({ accountId, conversationId, content });
+  }
+});
+
+app.listen(8000, () => console.log('Bot listening on port 8000'));
+```
+
+<Note>
+  Only react to `message_type: "incoming"` messages. Outgoing messages (sent by your bot or by agents) also fire `message_created` events — ignoring them prevents infinite reply loops.
+</Note>
+
+## Send Replies via the API
+
+Use the Create Message API to post your bot's reply back into the conversation:
+
+```
+POST /api/v1/accounts/{account_id}/conversations/{conversation_id}/messages
+```
+
+```bash
+curl --request POST \
+  --url https://app.chatwoot.com/api/v1/accounts/1/conversations/55/messages \
+  --header 'Content-Type: application/json' \
+  --header 'api_access_token: BOT_ACCESS_TOKEN' \
+  --data '{
+    "content": "Hi! I can help with orders and returns. What do you need?",
+    "message_type": "outgoing",
+    "private": false
+  }'
+```
+
+To send an interactive message (option picker, card, form), set `content_type` and `content_attributes` as described in [Interactive Messages](/developers/interactive-messages).
+
+## Human Agent Handoff
+
+When your bot determines a conversation needs a human, call the Conversation Update API to set the status to `open`:
+
+```
+PATCH /api/v1/accounts/{account_id}/conversations
+```
+
+```bash
+curl --request PATCH \
+  --url https://app.chatwoot.com/api/v1/accounts/1/conversations/55 \
+  --header 'Content-Type: application/json' \
+  --header 'api_access_token: BOT_ACCESS_TOKEN' \
+  --data '{
+    "status": "open"
+  }'
+```
+
+Setting status to `open` moves the conversation out of the bot queue and into the agents' view. An agent can then assign themselves and take over.
+
+<Tip>
+  Before handing off, post a brief message to the contact such as "Connecting you with a support agent — they'll be with you shortly." It sets expectations and improves the customer experience.
+</Tip>
+
+## Push Back to Bot Queue
+
+Agents can return a conversation to the bot queue at any time by setting the conversation status back to `pending`. Your bot will resume receiving events for that conversation automatically. This is useful for re-triaging conversations that were escalated by mistake or for running additional bot-driven steps after an agent interaction.
+
+## Architecture Overview
+
+```
+Customer Widget
+      │
+      ▼
+  Chatwoot
+  (status: pending)
+      │  webhook POST
+      ▼
+  Your Bot Service
+  ├── Intent detection (Dialogflow / Rasa / LLM)
+  ├── External API calls (order status, CRM)
+  └── POST reply via Chatwoot API
+            │
+            ▼ (if handoff needed)
+  Chatwoot status → "open"
+            │
+            ▼
+       Human Agent
+```
+
+## Implementation Examples
+
+The Chatwoot community maintains several open-source bot integration demos:
+
+- **Dialogflow** — hotel booking demo: [github.com/chatwoot/dialogflow-agent-bot-demo](https://github.com/chatwoot/dialogflow-agent-bot-demo)
+- **Rasa** — intent classification demo: [github.com/chatwoot/rasa-agent-bot-demo](https://github.com/chatwoot/rasa-agent-bot-demo)
+- **Botpress** — community bridge: [github.com/douglara/chatwoot-botpress-bridge](https://github.com/douglara/chatwoot-botpress-bridge)
+
+## Next Steps
+
+- Enrich your bot's responses with [Interactive Messages](/developers/interactive-messages) like option pickers and product cards.
+- Subscribe to additional [Webhook Events](/developers/webhook-events) to react to label changes, team assignments, and more.
+- Review the full [API Reference](https://www.chatwoot.com/developers/api) for all available conversation and message endpoints your bot can call.

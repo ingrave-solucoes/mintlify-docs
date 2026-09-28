@@ -1,0 +1,97 @@
+---
+title: 'Collect Customer Satisfaction Scores with CSAT'
+sidebarTitle: 'CSAT'
+description: 'Enable CSAT surveys in Chatwoot to automatically collect customer ratings after every resolved conversation and monitor your support team performance.'
+---
+
+Customer Satisfaction Score (CSAT) is one of the most direct ways to measure how well your support team is serving customers. When an agent resolves a conversation in Chatwoot, the platform automatically sends a short survey asking the customer to rate their experience. The responses feed into a dedicated CSAT report, giving you an ongoing, data-driven view of customer sentiment.
+
+## What Is CSAT?
+
+CSAT measures how satisfied a customer is with a specific interaction — in this case, a support conversation. Chatwoot calculates your CSAT score using the following formula:
+
+```
+Satisfaction Score = (Total positive ratings / Total responses) × 100
+```
+
+A higher score means more customers left your conversations feeling good about the experience.
+
+## How the Survey Is Delivered
+
+Chatwoot sends the CSAT survey automatically when an agent marks a conversation as **Resolved**. The format of the survey depends on the channel the conversation took place in.
+
+<Tabs>
+  <Tab title="Website Widget">
+    The CSAT survey appears as an interactive emoji-scale prompt directly inside the live-chat widget on your website. The customer taps an emoji to rate their experience and can optionally leave a text comment.
+  </Tab>
+  <Tab title="Other Channels (Email, SMS, WhatsApp, etc.)">
+    For non-website channels, Chatwoot sends the survey as a message within the same conversation thread. The customer replies with their rating using the provided emoji scale and can add optional written feedback.
+  </Tab>
+</Tabs>
+
+The survey prompt asks the customer to rate their conversation on an emoji scale. After submitting a rating, the customer is invited — but not required — to leave additional written feedback.
+
+## Enabling CSAT for an Inbox
+
+CSAT is disabled by default on all inboxes. You need to enable it separately for each inbox where you want to collect ratings.
+
+<Steps>
+  <Step title="Open Inbox Settings">
+    In the Chatwoot sidebar, go to **Settings → Inboxes**. Click the **Settings** link next to the inbox you want to configure.
+  </Step>
+  <Step title="Find the CSAT toggle">
+    In the inbox settings page, locate the **CSAT** section.
+  </Step>
+  <Step title="Enable CSAT">
+    Toggle the CSAT switch to the **on** position.
+  </Step>
+  <Step title="Save your settings">
+    Click **Update** to save the change. Chatwoot will now send a survey every time a conversation in this inbox is resolved.
+  </Step>
+</Steps>
+
+<Note>
+  Repeat this process for each inbox where you want CSAT surveys. Inboxes where CSAT remains disabled will not send surveys or appear in the CSAT report.
+</Note>
+
+## Viewing CSAT Results
+
+Once surveys are being sent and customers are responding, you can analyse the results in the CSAT report.
+
+<Steps>
+  <Step title="Open the CSAT report">
+    Click **Reports** in the Chatwoot sidebar, then select **CSAT**.
+  </Step>
+  <Step title="Set the date range">
+    Use the **Duration** dropdown to choose the time period you want to analyse. The default is the last 7 days.
+  </Step>
+  <Step title="Filter by agent (optional)">
+    Use the **Agents** dropdown to focus on the survey responses handled by specific agents.
+  </Step>
+</Steps>
+
+### Report Metrics
+
+The upper section of the CSAT report displays a summary of key metrics:
+
+<CardGroup cols={3}>
+  <Card title="Total Responses" icon="chart-bar">
+    The number of customers who completed the survey in the selected period.
+  </Card>
+  <Card title="Satisfaction Score" icon="star">
+    The percentage of positive ratings out of total responses. Higher is better.
+  </Card>
+  <Card title="Response Rate" icon="percent">
+    The proportion of surveys sent that received a response, calculated as `(responses / surveys sent) × 100`.
+  </Card>
+</CardGroup>
+
+The report also shows an **emoji scale breakdown** — the percentage of customers who selected each emoji option — giving you a distribution of how strongly customers felt about their experience.
+
+### Individual Responses
+
+The lower section of the CSAT report lists every individual survey response, including the rating, any written feedback, the agent who handled the conversation, and a link to the conversation itself.
+
+<Tip>
+  Click any conversation ID in the CSAT report to jump directly to that conversation in your inbox, making it easy to follow up on negative ratings.
+</Tip>

@@ -1,0 +1,251 @@
+---
+title: 'Send Interactive Messages via the Chatwoot API'
+sidebarTitle: 'Interactive Messages'
+description: 'Learn how to send input_select, cards, form, and article interactive messages through the Chatwoot API with full payload examples.'
+---
+
+Interactive messages let you go beyond plain text in the Chatwoot web widget. Instead of asking a customer to type a free-form answer, you can present them with a polished set of options, a structured form, a product card carousel, or a curated list of help articles — all rendered natively inside the chat window. You send interactive messages through the same [Create Message API](https://www.chatwoot.com/developers/api/#operation/create-a-new-message-in-a-conversation) used for regular text messages; the difference is in the `content_type` and `content_attributes` fields you provide.
+
+## How Interactive Messages Work
+
+Every message in Chatwoot has a `content_type` field that controls how the widget renders it. For plain text messages the default is `"text"`. For interactive messages, set `content_type` to one of the four supported types:
+
+| `content_type` | Renders as |
+|----------------|-----------|
+| `input_select` | A list of selectable options |
+| `form` | A multi-field form |
+| `cards` | A horizontal card carousel |
+| `article` | A list of linked help articles |
+
+When you set `content_type` to any of these values, Chatwoot also sets `message_type` to `"template"` internally to distinguish it from regular conversation messages.
+
+## Send an Interactive Message
+
+Use the Create Message endpoint to post an interactive message to a conversation:
+
+```
+POST /api/v1/accounts/{account_id}/conversations/{conversation_id}/messages
+```
+
+Pass your access token in the `api_access_token` header and send a JSON body with the fields described below.
+
+<ParamField body="content" type="string" required>
+  A fallback text label for the message. Some channel types and integrations display this text when they cannot render the rich content.
+</ParamField>
+
+<ParamField body="content_type" type="string" required>
+  The interactive message type. One of `input_select`, `form`, `cards`, or `article`.
+</ParamField>
+
+<ParamField body="content_attributes" type="object" required>
+  The rich content payload. Structure varies by `content_type` — see each type below.
+</ParamField>
+
+<ParamField body="private" type="boolean" default="false">
+  Set to `true` to send as a private note visible only to agents. Private notes cannot be interactive messages shown to contacts.
+</ParamField>
+
+---
+
+## Message Types
+
+### Options (`input_select`)
+
+Use `input_select` to present the contact with a discrete list of choices. The widget renders each item as a tappable button. When the contact selects an option, their choice is sent back as a regular incoming message.
+
+<ParamField body="content_attributes.items" type="array" required>
+  An array of option objects. Each object requires:
+  - `title` (string) — the label displayed to the contact.
+  - `value` (string) — the value sent back when the contact selects this option.
+</ParamField>
+
+```json
+{
+  "content": "Select one of the items below",
+  "content_type": "input_select",
+  "content_attributes": {
+    "items": [
+      { "title": "Option1", "value": "Option 1" },
+      { "title": "Option2", "value": "Option 2" }
+    ]
+  },
+  "private": false
+}
+```
+
+---
+
+### Form (`form`)
+
+Use `form` to collect structured input from a contact in a single interactive step. The widget renders a mini-form with labelled fields; the contact fills it in and submits it as one message.
+
+<ParamField body="content_attributes.items" type="array" required>
+  An array of field definition objects. Each object supports:
+
+  - `name` (string) — the field identifier used when the form is submitted.
+  - `label` (string) — the human-readable label shown above the field.
+  - `placeholder` (string) — placeholder text shown inside the field.
+  - `type` (string) — field input type: `text`, `email`, `text_area`, or `select`.
+  - `default` (string) — pre-filled default value for the field.
+  - `options` (array) — required when `type` is `select`. Each option needs a `label` and `value`.
+</ParamField>
+
+```json
+{
+  "content": "form",
+  "content_type": "form",
+  "content_attributes": {
+    "items": [
+      {
+        "name": "email",
+        "placeholder": "Please enter your email",
+        "type": "email",
+        "label": "Email",
+        "default": "you@example.com"
+      },
+      {
+        "name": "description",
+        "placeholder": "Please enter text",
+        "type": "text_area",
+        "label": "Description",
+        "default": ""
+      },
+      {
+        "name": "subject",
+        "placeholder": "Please enter text",
+        "type": "text",
+        "label": "Subject",
+        "default": ""
+      },
+      {
+        "name": "department",
+        "label": "Department",
+        "type": "select",
+        "options": [
+          { "label": "Sales", "value": "sales" },
+          { "label": "Support", "value": "support" }
+        ]
+      }
+    ]
+  },
+  "private": false
+}
+```
+
+---
+
+### Cards (`cards`)
+
+Use `cards` to display rich product or content cards in a horizontal scrollable carousel. Each card can include an image, a title, a description, and one or more action buttons.
+
+<ParamField body="content_attributes.items" type="array" required>
+  An array of card objects. Each card supports:
+
+  - `media_url` (string) — URL of the card's cover image.
+  - `title` (string) — headline text for the card.
+  - `description` (string) — supporting body text.
+  - `actions` (array) — buttons rendered on the card. Each action requires:
+    - `type` (string) — `"link"` to open a URL, or `"postback"` to send a payload back to your webhook.
+    - `text` (string) — button label.
+    - `uri` (string) — destination URL, required when `type` is `"link"`.
+    - `payload` (string) — postback string sent to your server, required when `type` is `"postback"`.
+</ParamField>
+
+```json
+{
+  "content": "Check out our latest products",
+  "content_type": "cards",
+  "content_attributes": {
+    "items": [
+      {
+        "media_url": "https://example.com/product-image.jpg",
+        "title": "Nike Shoes 2.0",
+        "description": "Premium running shoes with advanced cushioning.",
+        "actions": [
+          {
+            "type": "link",
+            "text": "View Details",
+            "uri": "https://example.com/products/nike-shoes-2"
+          },
+          {
+            "type": "postback",
+            "text": "Add to Cart",
+            "payload": "ADD_TO_CART:nike-shoes-2"
+          }
+        ]
+      }
+    ]
+  },
+  "private": false
+}
+```
+
+---
+
+### Articles (`article`)
+
+Use `article` to surface relevant help centre content directly in the chat. Each article renders as a clickable link card with a title and short description.
+
+<ParamField body="content_attributes.items" type="array" required>
+  An array of article objects. Each article requires:
+
+  - `title` (string) — the article headline.
+  - `description` (string) — a brief summary of the article's content.
+  - `link` (string) — the full URL to the article.
+</ParamField>
+
+```json
+{
+  "content": "Here are some helpful articles",
+  "content_type": "article",
+  "content_attributes": {
+    "items": [
+      {
+        "title": "Getting Started with the API",
+        "description": "A step-by-step guide to your first API integration.",
+        "link": "https://www.chatwoot.com/developers/api"
+      },
+      {
+        "title": "Setting Up Webhooks",
+        "description": "Learn how to receive real-time events from Chatwoot.",
+        "link": "https://www.chatwoot.com/docs/product/features/webhooks"
+      }
+    ]
+  },
+  "private": false
+}
+```
+
+---
+
+## Complete cURL Example
+
+The following example sends an `input_select` message to conversation `123` in account `1`:
+
+```bash
+curl --request POST \
+  --url https://app.chatwoot.com/api/v1/accounts/1/conversations/123/messages \
+  --header 'Content-Type: application/json' \
+  --header 'api_access_token: YOUR_TOKEN' \
+  --data '{
+    "content": "How can we help you today?",
+    "content_type": "input_select",
+    "content_attributes": {
+      "items": [
+        { "title": "Track my order", "value": "track_order" },
+        { "title": "Return an item",  "value": "return_item" },
+        { "title": "Speak to an agent", "value": "human_handoff" }
+      ]
+    },
+    "private": false
+  }'
+```
+
+<Note>
+  Interactive messages are rendered only in the Chatwoot web widget (`Channel::LiveChat` and `Channel::Api`). If a conversation originates from an email, Twitter, or Facebook inbox, the contact will see the `content` fallback text instead of the rich UI.
+</Note>
+
+## Next Steps
+
+- Use interactive messages inside an [Agent Bot](/developers/agent-bots) to build automated triage flows.
+- Combine `cards` with `postback` actions and a webhook handler to create interactive shopping or booking experiences.

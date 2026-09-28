@@ -1,0 +1,122 @@
+---
+title: 'Manage Your Chatwoot Notification Preferences'
+sidebarTitle: 'Notifications'
+description: 'Configure email, push, and audio notifications in Chatwoot so every agent stays informed about the conversations and mentions that matter most.'
+---
+
+Chatwoot notifies agents through three complementary channels — email, browser push notifications, and in-app audio alerts — so you never miss a new conversation, an assignment, or a mention. Each agent controls their own preferences independently, meaning one agent can opt into every notification type while another limits themselves to mentions only. Configure your preferences under **Profile Settings → Notifications**.
+
+---
+
+## Notification types
+
+<CardGroup cols={3}>
+  <Card title="Email Notifications" icon="envelope">
+    Chatwoot sends an email to your registered address whenever a subscribed event occurs. Ideal for agents who are not always logged into the dashboard.
+  </Card>
+  <Card title="Push Notifications" icon="bell">
+    Chatwoot delivers browser push notifications in real time. Your browser must grant notification permission for these to appear.
+  </Card>
+  <Card title="Audio Notifications" icon="volume-high">
+    Chatwoot plays a sound alert for new activity. You can limit audio alerts to conversations assigned to you or enable them for all conversations account-wide.
+  </Card>
+</CardGroup>
+
+---
+
+## Email notifications
+
+Email notifications are delivered to the email address tied to your Chatwoot agent account. You can enable or disable each trigger independently.
+
+| Trigger | When the notification is sent |
+|---|---|
+| **New conversation created** | A new conversation is opened in any inbox you are assigned to |
+| **Conversation assigned to me** | Another agent or an Administrator assigns an existing conversation to you |
+| **Mentioned in a conversation** | An agent types `@your-email` in a private note within a conversation |
+| **New message in an assigned conversation** | A new message arrives in a conversation already assigned to you |
+
+<Steps>
+  <Step title="Open your Profile Settings">
+    Click your avatar in the bottom-left corner of the Chatwoot dashboard and select **Profile Settings**.
+  </Step>
+  <Step title="Scroll to Email Notifications">
+    Find the **Email Notifications** section on the page.
+  </Step>
+  <Step title="Select your triggers">
+    Check the boxes next to the events you want to receive email alerts for. You can select multiple options simultaneously.
+  </Step>
+  <Step title="Save">
+    Click **Save Settings** to apply your preferences.
+  </Step>
+</Steps>
+
+---
+
+## Push notifications
+
+Push notifications appear in your browser or desktop notification center in real time. They mirror the same event triggers as email notifications but deliver instantly without requiring you to check your inbox.
+
+| Trigger | When the notification is sent |
+|---|---|
+| **New conversation created** | A new conversation is opened in any inbox you are assigned to |
+| **Conversation assigned to me** | A conversation is assigned to you by another agent or Administrator |
+| **Mentioned in a conversation** | An agent addresses you with `@your-email` in a private note |
+| **New message in an assigned conversation** | A new message arrives in a conversation assigned to you |
+
+<Steps>
+  <Step title="Open your Profile Settings">
+    Click your avatar in the bottom-left corner and select **Profile Settings**.
+  </Step>
+  <Step title="Grant browser permission">
+    If your browser has not already requested it, click the **Enable Push Notifications** button and accept the permission prompt from your browser. Without this permission, no push notifications can be delivered.
+  </Step>
+  <Step title="Select your triggers">
+    Check the boxes under **Push Notifications** for the events you want to receive.
+  </Step>
+  <Step title="Save">
+    Click **Save Settings**.
+  </Step>
+</Steps>
+
+<Warning>
+  If you clear your browser's notification permissions or switch to a different browser, you need to re-enable push notifications from Profile Settings.
+</Warning>
+
+---
+
+## Audio notifications
+
+Audio notifications play a sound inside the Chatwoot dashboard tab when new activity occurs. They are useful in busy support environments where agents may not be watching the screen constantly.
+
+You have three options:
+
+| Setting | Behaviour |
+|---|---|
+| **None** | No audio alerts are played |
+| **Conversations assigned to me** | Audio plays only when a new message arrives in one of your assigned conversations |
+| **All conversations** | Audio plays for every new message across the account, regardless of assignment |
+
+<Steps>
+  <Step title="Open your Profile Settings">
+    Click your avatar and select **Profile Settings**.
+  </Step>
+  <Step title="Locate Audio Notifications">
+    Find the **Audio Notifications** section.
+  </Step>
+  <Step title="Choose your setting">
+    Select **None**, **Conversations assigned to me**, or **All conversations** from the options provided.
+  </Step>
+  <Step title="Save">
+    Click **Save Settings** to apply the change.
+  </Step>
+</Steps>
+
+<Tip>
+  In shared or open-plan offices, set audio notifications to **Conversations assigned to me** to avoid unnecessary sound interruptions for the whole team.
+</Tip>
+
+---
+
+## Access token
+
+Your Profile Settings page also contains an **Access Token** section that displays a personal API token. This token authenticates API requests made on your behalf (for example, integrations that call the Chatwoot REST API). Click **Copy** to copy the token to your clipboard, then paste it into your integration's configuration. Keep this token secure — treat it the same way you would treat a password.

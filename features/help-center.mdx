@@ -1,0 +1,110 @@
+---
+title: 'Build a Self-Service Help Center in Chatwoot'
+sidebarTitle: 'Help Center'
+description: 'Create a branded Help Center portal in Chatwoot with articles and categories so customers can find answers without contacting support.'
+---
+
+The Chatwoot Help Center lets you publish a self-service knowledge base where customers can browse articles and find answers on their own — reducing the volume of repetitive support requests your team receives. You organise your content into categories, write and publish articles using a rich-text editor, and serve everything from a URL that reflects your brand.
+
+<Note>
+  The Help Center is a beta feature that continues to receive improvements with each Chatwoot release.
+</Note>
+
+## Setting Up Your Help Center
+
+Creating a Help Center involves three stages: creating a portal, organising it with categories, and writing articles. Work through them in order.
+
+## Step 1 — Create a Portal
+
+A portal is the top-level container for your Help Center. Each portal has its own URL and branding.
+
+<Steps>
+  <Step title="Open the Help Center">
+    Click the **Help Center** icon in the Chatwoot sidebar.
+  </Step>
+  <Step title="Create a new portal">
+    Click the **New Portal** button.
+  </Step>
+  <Step title="Fill in the basic settings">
+    Complete the portal configuration form:
+
+    | Field | Description |
+    |---|---|
+    | **Logo** | Upload your organisation's logo. This appears in the portal header. |
+    | **Name** | An internal name used to refer to this portal within Chatwoot. |
+    | **Slug** | Auto-generated from the portal name. This forms part of the public URL. |
+    | **Custom Domain** *(optional)* | Enter a custom domain if you want to serve the portal at a specific URL (for example, `docs.yourcompany.com`). |
+
+  </Step>
+  <Step title="Save the portal">
+    Click **Create portal basic settings**. Your portal is now ready, and you can start adding categories and articles.
+  </Step>
+</Steps>
+
+<Info>
+  If you want the portal accessible at a custom subdomain (e.g., `help.yourcompany.com`), set up the appropriate DNS record pointing to Chatwoot before entering the custom domain here.
+</Info>
+
+## Step 2 — Create Categories
+
+Categories structure your portal so customers can navigate by topic rather than scrolling through a single list of articles. Create categories before writing articles, as each article is assigned to one.
+
+<Steps>
+  <Step title="Open the Categories panel">
+    In the Help Center sidebar, click the **+** icon next to the **Categories** section.
+  </Step>
+  <Step title="Fill in the category details">
+    A modal will appear. Complete the fields:
+
+    | Field | Description |
+    |---|---|
+    | **Name** | The category title displayed publicly on your portal. |
+    | **Slug** | Auto-generated from the name. Used in the category URL. |
+    | **Description** *(optional)* | A brief summary of what this category covers. |
+
+  </Step>
+  <Step title="Save the category">
+    Click **Create category**. Repeat this step to create as many categories as you need.
+  </Step>
+</Steps>
+
+## Step 3 — Write and Publish Articles
+
+Articles are the individual help documents your customers read. You write them using a rich-text editor directly inside Chatwoot.
+
+<Steps>
+  <Step title="Start a new article">
+    Click the **New Article** button, which is available from almost every page within the Help Center section.
+  </Step>
+  <Step title="Write your content">
+    Use the text editor to write your article. The editor supports headings, paragraphs, lists, links, code blocks, and other standard formatting options.
+  </Step>
+  <Step title="Configure the article metadata">
+    Use the sidebar panel on the right to:
+    - Assign the article to a **Category**.
+    - Set the **Author** (defaults to you).
+    - Update the **meta title** and **meta description** for SEO.
+  </Step>
+  <Step title="Preview your article">
+    Click the **Preview** button to see how the article will look to customers before publishing.
+  </Step>
+  <Step title="Publish the article">
+    When you are happy with the content, click **Publish**. The article becomes immediately visible on your public portal.
+  </Step>
+</Steps>
+
+<Tip>
+  Keep article titles short and descriptive — customers often scan titles when browsing a category. Start each title with the outcome or task, for example "Reset your password" or "Connect a WhatsApp inbox."
+</Tip>
+
+## Using Your Help Center URL
+
+Once your portal is live, customers can access it at the URL Chatwoot generates from your slug. If you configured a custom domain, the portal is available there instead.
+
+Share the Help Center URL in your:
+
+- **Chat widget greeting message** — paste the URL in the welcome text so customers can self-serve before starting a conversation.
+- **Email signatures** — link agents' email signatures to relevant Help Center articles.
+- **Automated bot responses** — reference specific articles in automated replies.
+
+You can also link directly to individual articles or categories by copying the URL from the preview page.

@@ -1,0 +1,116 @@
+---
+title: 'Add a Live Chat Widget to Your Website'
+sidebarTitle: 'Live Chat'
+description: 'Create a website inbox, paste a single script tag, and start chatting with visitors — configure greetings, pre-chat forms, and widget colors in minutes.'
+---
+
+The Chatwoot live chat widget is the fastest way to open a real-time support channel on any website. You create a **website inbox**, copy a small JavaScript snippet, paste it into your site's HTML, and your customers can start conversations immediately — no app download required on their end. Every conversation lands in your Chatwoot dashboard alongside messages from all your other channels.
+
+## Create a Website Inbox
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes** and click **Add Inbox**.
+  </Step>
+  <Step title="Select the Website channel">
+    Click the **Website** icon from the list of available channel types.
+  </Step>
+  <Step title="Fill in your website details">
+    Complete the fields shown in the setup form:
+
+    | Field | Description | Example |
+    |---|---|---|
+    | Website Name | Display name for this inbox inside Chatwoot | `Acme Support` |
+    | Website Domain | The URL where the widget will appear | `www.acme.com` |
+    | Widget Color | Brand color for the chat bubble and header | Pick from the color palette |
+    | Welcome Heading | First line of text customers see in the widget | `Hi there 👋` |
+    | Welcome Tagline | Supporting text below the heading | `We're here 24 × 7 — ask us anything.` |
+    | Enable Channel Greeting | Toggle to send an automatic first message | Enabled |
+    | Channel Greeting Message | The auto-sent message when a conversation opens | `Hi! How can we help you today?` |
+
+    Click **Create Inbox** when you are done.
+  </Step>
+  <Step title="Add agents to the inbox">
+    Select one or more agents from the dropdown and click **Add Agents**. Agents must be assigned to an inbox before they can see its conversations — this applies to administrators too.
+  </Step>
+  <Step title="Copy and embed the widget script">
+    Chatwoot displays your unique code snippet on the confirmation screen. Copy it and paste it into the `<head>` or just before the closing `</body>` tag of every page on your site.
+  </Step>
+</Steps>
+
+## Embed Code Snippet
+
+After creating your inbox, navigate to **Settings → Inboxes → (your inbox) → Configuration** to retrieve your embed code at any time. It looks like this:
+
+```html
+<script>
+  (function(d,t) {
+    var BASE_URL="https://app.chatwoot.com";
+    var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=BASE_URL+"/packs/js/sdk.js";
+    g.defer = true;
+    g.async = true;
+    s.parentNode.insertBefore(g,s);
+    g.onload=function(){
+      window.chatwootSDK.run({
+        websiteToken: 'YOUR_WEBSITE_TOKEN',
+        baseUrl: BASE_URL
+      })
+    }
+  })(document,"script");
+</script>
+```
+
+Replace `YOUR_WEBSITE_TOKEN` with the token shown in your inbox's Configuration tab. Paste this snippet into the root layout file of your site so the widget loads on every page.
+
+<Tip>
+  If your site is built with **Webflow**, paste the snippet under **Settings → Custom Code → Footer Code** in your Webflow project, then publish your site.
+</Tip>
+
+## Configure Inbox Settings
+
+After creating the inbox, click the **gear icon** next to it in **Settings → Inboxes** to access additional configuration options.
+
+### Greeting Message
+
+Enable **Channel Greeting** on the **Settings** tab to send an automatic message at the start of every new conversation. Set the message text to a friendly opener that matches your brand voice.
+
+### Email Collect Box
+
+The **Enable email collect box** option is turned on by default. When enabled, Chatwoot asks visitors for their email address at the start of a conversation. Collecting emails enables [conversation continuity](/channels/live-chat#conversation-continuity) — customers receive a follow-up email thread if they leave before an agent replies.
+
+### CSAT Surveys
+
+Enable **CSAT** on the **Settings** tab to automatically send a Customer Satisfaction survey every time a conversation is resolved. Review the results in **Reports → CSAT**.
+
+### Pre-Chat Form
+
+Use the **Pre Chat Form** tab to collect visitor information before the conversation begins. This is especially useful when you want to route conversations or pre-populate contact records.
+
+| Field | Description |
+|---|---|
+| Enable pre-chat form | Show the form before the chat window opens |
+| Pre-Chat Message | Instructions shown at the top of the form |
+| Require name and email | Make name and email address mandatory fields |
+
+Click **Update** to save your changes.
+
+### Widget Builder
+
+Open the **Widget Builder** tab to customize the widget's appearance with a live preview. You can adjust the color scheme, position, and other visual options without writing any code.
+
+### Business Hours
+
+Set your team's working hours on the **Business Hours** tab. Tick **Enable business availability for this inbox**, choose your timezone, and configure available hours for each day of the week. Customers who contact you outside these hours see the offline message you configure here.
+
+### Collaborators
+
+Use the **Collaborators** tab to add or remove agents from this inbox and to toggle **automatic conversation assignment** on or off. When automatic assignment is enabled, new conversations are distributed evenly among available agents.
+
+## Conversation Continuity
+
+When a visitor provides their email address — through the pre-chat form, the email collect prompt, or via the Chatwoot SDK — Chatwoot can continue the conversation over email if they leave the chat. The customer receives an email thread with a summary of the conversation and can reply directly. Their replies arrive back in the Chatwoot dashboard as part of the same conversation thread.
+
+<Note>
+  Self-hosted installations require extra configuration to enable conversation continuity. See the self-hosted email continuity guide for details.
+</Note>

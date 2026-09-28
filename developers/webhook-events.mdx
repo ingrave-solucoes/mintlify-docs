@@ -1,0 +1,449 @@
+---
+title: 'Complete Reference of Chatwoot Webhook Events'
+sidebarTitle: 'Webhook Events'
+description: 'Full payload schemas for every Chatwoot webhook event type, including message, conversation, contact, and widget events.'
+---
+
+Chatwoot publishes a rich set of webhook events whenever something changes in your account. Each event carries a structured JSON payload built around one of a handful of core object types. This reference describes every supported event, its trigger condition, and the exact fields you can expect in the payload. To learn how to register a webhook endpoint, see [Set Up Webhooks](/developers/webhooks).
+
+## Core Object Types
+
+Every webhook payload is composed of one or more of the following base objects. Understanding these objects makes it straightforward to parse any event payload.
+
+### Account Object
+
+<ResponseField name="id" type="integer">
+  Unique identifier for the Chatwoot account.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Display name of the account.
+</ResponseField>
+
+```json
+{
+  "id": 1,
+  "name": "Acme Support"
+}
+```
+
+---
+
+### Inbox Object
+
+<ResponseField name="id" type="integer">
+  Unique identifier for the inbox.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Display name of the inbox (e.g. "Live Chat", "Email Support").
+</ResponseField>
+
+```json
+{
+  "id": 3,
+  "name": "Live Chat"
+}
+```
+
+---
+
+### Contact Object
+
+<ResponseField name="id" type="integer">
+  Unique identifier for the contact.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Full name of the contact.
+</ResponseField>
+
+<ResponseField name="avatar" type="string">
+  URL of the contact's avatar image.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Always `"contact"`.
+</ResponseField>
+
+<ResponseField name="account" type="object">
+  The account this contact belongs to. See [Account Object](#account-object).
+</ResponseField>
+
+```json
+{
+  "id": 42,
+  "name": "Jane Doe",
+  "avatar": "https://example.com/avatar.png",
+  "type": "contact",
+  "account": {
+    "id": 1,
+    "name": "Acme Support"
+  }
+}
+```
+
+---
+
+### User Object
+
+Represents an agent or administrator.
+
+<ResponseField name="id" type="integer">
+  Unique identifier for the user.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Full name of the agent or admin.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Email address of the agent or admin.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Always `"user"`.
+</ResponseField>
+
+```json
+{
+  "id": 7,
+  "name": "Alice Agent",
+  "email": "alice@example.com",
+  "type": "user"
+}
+```
+
+---
+
+### Conversation Object
+
+<ResponseField name="id" type="integer">
+  Internal conversation ID.
+</ResponseField>
+
+<ResponseField name="inbox_id" type="integer">
+  ID of the inbox this conversation belongs to.
+</ResponseField>
+
+<ResponseField name="account_id" type="integer">
+  ID of the account this conversation belongs to.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current status: `"open"`, `"resolved"`, or `"pending"`.
+</ResponseField>
+
+<ResponseField name="channel" type="string">
+  Channel type, e.g. `"Channel::Api"`, `"Channel::LiveChat"`.
+</ResponseField>
+
+<ResponseField name="can_reply" type="boolean">
+  Whether the assigned agent can currently reply.
+</ResponseField>
+
+<ResponseField name="unread_count" type="integer">
+  Number of unread messages in the conversation.
+</ResponseField>
+
+<ResponseField name="agent_last_seen_at" type="unix-timestamp">
+  Unix timestamp of the last time an agent viewed the conversation.
+</ResponseField>
+
+<ResponseField name="contact_last_seen_at" type="unix-timestamp">
+  Unix timestamp of the last time the contact viewed the conversation.
+</ResponseField>
+
+<ResponseField name="timestamp" type="unix-timestamp">
+  Unix timestamp of the conversation's last activity.
+</ResponseField>
+
+<ResponseField name="contact_inbox" type="object">
+  The contact-inbox session. Contains `id`, `contact_id`, `inbox_id`, `source_id`, `created_at`, `updated_at`, and `hmac_verified`.
+</ResponseField>
+
+<ResponseField name="meta" type="object">
+  Contains `sender` (Contact Object) and `assignee` (User Object).
+</ResponseField>
+
+<ResponseField name="additional_attributes" type="object">
+  Browser and referral metadata: `browser` (device_name, browser_name, platform_name, browser_version, platform_version), `referer`, and `initiated_at`.
+</ResponseField>
+
+<ResponseField name="messages" type="array">
+  Array of Message Objects included in the conversation snapshot.
+</ResponseField>
+
+---
+
+### Message Object
+
+<ResponseField name="id" type="integer">
+  Unique identifier for the message.
+</ResponseField>
+
+<ResponseField name="content" type="string">
+  Text content of the message.
+</ResponseField>
+
+<ResponseField name="message_type" type="integer">
+  `0` = incoming (from contact), `1` = outgoing (from agent), `2` = activity, `3` = template.
+</ResponseField>
+
+<ResponseField name="created_at" type="unix-timestamp">
+  Unix timestamp when the message was created.
+</ResponseField>
+
+<ResponseField name="private" type="boolean">
+  `true` if the message is a private note visible only to agents.
+</ResponseField>
+
+<ResponseField name="source_id" type="string | null">
+  External identifier for messages originating from third-party channels (Twitter, Facebook, etc.).
+</ResponseField>
+
+<ResponseField name="content_type" type="string">
+  Message content type: `"text"`, `"input_select"`, `"cards"`, `"form"`, or `"article"`.
+</ResponseField>
+
+<ResponseField name="content_attributes" type="object">
+  Rich content payload. Schema varies by `content_type`. See [Interactive Messages](/developers/interactive-messages).
+</ResponseField>
+
+<ResponseField name="sender" type="object">
+  The Contact or User who sent the message.
+</ResponseField>
+
+<ResponseField name="account" type="object">
+  The account the message belongs to.
+</ResponseField>
+
+<ResponseField name="conversation" type="object">
+  The conversation the message belongs to.
+</ResponseField>
+
+<ResponseField name="inbox" type="object">
+  The inbox the message was sent through.
+</ResponseField>
+
+---
+
+## Webhook Events
+
+### `message_created`
+
+Fires whenever a new message is created in any conversation, whether incoming (from the contact) or outgoing (from an agent).
+
+```json
+{
+  "event": "message_created",
+  "id": 101,
+  "content": "Hello, I need help with my order.",
+  "created_at": 1677000000,
+  "message_type": 0,
+  "private": false,
+  "source_id": null,
+  "content_type": "text",
+  "content_attributes": {},
+  "sender": {
+    "id": 42,
+    "name": "Jane Doe",
+    "type": "contact"
+  },
+  "account": { "id": 1, "name": "Acme Support" },
+  "conversation": { "id": 55, "status": "open" },
+  "inbox": { "id": 3, "name": "Live Chat" }
+}
+```
+
+---
+
+### `message_updated`
+
+Fires whenever an existing message is edited or its attributes change (e.g. a reaction is added).
+
+```json
+{
+  "event": "message_updated",
+  "id": 101,
+  "content": "Hello, I need help with my order — updated.",
+  "created_at": 1677000000,
+  "message_type": 0,
+  "private": false,
+  "source_id": null,
+  "content_type": "text",
+  "content_attributes": {},
+  "sender": {
+    "id": 42,
+    "name": "Jane Doe",
+    "type": "contact"
+  },
+  "account": { "id": 1, "name": "Acme Support" },
+  "conversation": { "id": 55, "status": "open" },
+  "inbox": { "id": 3, "name": "Live Chat" }
+}
+```
+
+---
+
+### `conversation_created`
+
+Fires when a new conversation is opened in the account.
+
+<ResponseField name="event" type="string">
+  Always `"conversation_created"`.
+</ResponseField>
+
+The remaining fields follow the [Conversation Object](#conversation-object) schema.
+
+```json
+{
+  "event": "conversation_created",
+  "id": 55,
+  "inbox_id": 3,
+  "account_id": 1,
+  "status": "open",
+  "channel": "Channel::LiveChat",
+  "can_reply": true,
+  "unread_count": 1,
+  "timestamp": 1677000000,
+  "meta": {
+    "sender": { "id": 42, "name": "Jane Doe", "type": "contact" },
+    "assignee": { "id": 7, "name": "Alice Agent", "type": "user" }
+  },
+  "additional_attributes": {},
+  "account": { "id": 1, "name": "Acme Support" }
+}
+```
+
+---
+
+### `conversation_updated`
+
+Fires whenever any attribute on a conversation changes — for example, the assigned agent, labels, or custom attributes.
+
+<ResponseField name="event" type="string">
+  Always `"conversation_updated"`.
+</ResponseField>
+
+<ResponseField name="changed_attributes" type="array">
+  An array of objects describing which attributes changed. Each entry contains the attribute name as a key, with `current_value` and `previous_value` sub-fields.
+</ResponseField>
+
+```json
+{
+  "event": "conversation_updated",
+  "id": 55,
+  "status": "open",
+  "changed_attributes": [
+    {
+      "assignee_id": {
+        "current_value": 7,
+        "previous_value": null
+      }
+    }
+  ],
+  "account": { "id": 1, "name": "Acme Support" }
+}
+```
+
+---
+
+### `conversation_status_changed`
+
+Fires specifically when a conversation's `status` field transitions between `open`, `resolved`, and `pending`.
+
+<Note>
+  If you are using the Agent Bot API instead of webhooks, `conversation_status_changed` is not yet supported via that channel. Use webhooks for this event.
+</Note>
+
+<ResponseField name="event" type="string">
+  Always `"conversation_status_changed"`.
+</ResponseField>
+
+The remaining fields follow the [Conversation Object](#conversation-object) schema, with the `status` field reflecting the **new** status.
+
+```json
+{
+  "event": "conversation_status_changed",
+  "id": 55,
+  "status": "resolved",
+  "account": { "id": 1, "name": "Acme Support" }
+}
+```
+
+---
+
+### `webwidget_triggered`
+
+Fires when a contact opens the Chatwoot live-chat web widget on your site.
+
+<ResponseField name="event" type="string">
+  Always `"webwidget_triggered"`.
+</ResponseField>
+
+<ResponseField name="id" type="integer">
+  Contact ID.
+</ResponseField>
+
+<ResponseField name="contact" type="object">
+  The Contact Object for the visitor.
+</ResponseField>
+
+<ResponseField name="inbox" type="object">
+  The Inbox Object for the web widget inbox.
+</ResponseField>
+
+<ResponseField name="account" type="object">
+  The Account Object.
+</ResponseField>
+
+<ResponseField name="current_conversation" type="object">
+  The most recent active Conversation Object for this contact, if one exists.
+</ResponseField>
+
+<ResponseField name="source_id" type="string">
+  The contact's session identifier.
+</ResponseField>
+
+<ResponseField name="event_info" type="object">
+  Metadata about the trigger: `initiated_at` (timestamp), `referer` (referring URL), `widget_language`, `browser_language`, and a `browser` sub-object with device and version details.
+</ResponseField>
+
+```json
+{
+  "event": "webwidget_triggered",
+  "id": 42,
+  "contact": { "id": 42, "name": "Jane Doe", "type": "contact" },
+  "inbox": { "id": 3, "name": "Live Chat" },
+  "account": { "id": 1, "name": "Acme Support" },
+  "current_conversation": null,
+  "source_id": "abc123",
+  "event_info": {
+    "initiated_at": { "timestamp": "2024-01-15T10:30:00Z" },
+    "referer": "https://www.example.com/pricing",
+    "widget_language": "en",
+    "browser_language": "en-US",
+    "browser": {
+      "browser_name": "Chrome",
+      "browser_version": "120.0",
+      "device_name": "MacBook Pro",
+      "platform_name": "Macintosh",
+      "platform_version": "14.0"
+    }
+  }
+}
+```
+
+---
+
+## Quick Reference
+
+| Event | Primary Object | Key Use Case |
+|-------|---------------|-------------|
+| `message_created` | Message | Trigger auto-replies, log messages to CRM |
+| `message_updated` | Message | Sync edits to external systems |
+| `conversation_created` | Conversation | Notify a team channel, create a support ticket |
+| `conversation_updated` | Conversation | Track assignment changes |
+| `conversation_status_changed` | Conversation | Close linked tickets when resolved |
+| `webwidget_triggered` | Contact + Inbox | Personalise the widget greeting |

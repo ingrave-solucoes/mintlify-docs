@@ -1,0 +1,120 @@
+---
+title: 'Speed Up Replies with Canned Responses'
+sidebarTitle: 'Canned Responses'
+description: 'Create, manage, and use canned responses in Chatwoot to answer common questions instantly and cut down your average reply time.'
+---
+
+Canned responses are pre-written reply templates that any agent can insert into a conversation with a single keystroke. Instead of retyping the same answer to a frequently asked question, you save it once as a canned response and retrieve it by typing a short shortcode. Every agent in your account shares the same library of canned responses, so your team's best answers are always available to everyone.
+
+## Creating a Canned Response
+
+<Steps>
+  <Step title="Open Canned Response Settings">
+    In the left sidebar, go to **Settings → Canned Responses**.
+  </Step>
+  <Step title="Click Add Canned Response">
+    Click the **Add Canned Response** button in the top-right corner of the page. A modal window opens.
+  </Step>
+  <Step title="Fill in the fields">
+    Complete both fields in the modal:
+
+    | Field | Description |
+    |---|---|
+    | **Short Code** | A memorable keyword (minimum 2 characters) that you'll type after `/` to trigger this response. Shortcodes must be unique — no two canned responses in your account can share the same shortcode. Example: `refund-policy` |
+    | **Content** | The full reply message that will be inserted into the editor when the shortcode is selected. |
+
+  </Step>
+  <Step title="Submit">
+    Click **Submit**. You'll see a confirmation — *"Canned Response added successfully"* — and the new response appears in your library immediately.
+  </Step>
+</Steps>
+
+<Note>
+Any agent or administrator can create canned responses, and all canned responses are shared across the entire account. There is no per-team or per-inbox scope.
+</Note>
+
+## Using a Canned Response in a Reply
+
+Retrieve a canned response at any point while composing a reply, without leaving the editor.
+
+<Steps>
+  <Step title="Open the Reply area">
+    Click on a conversation and make sure the **Reply** tab is active (not Private Note).
+  </Step>
+  <Step title="Type / to trigger the search">
+    Type `/` in the reply editor. A dropdown list of available canned responses appears immediately.
+  </Step>
+  <Step title="Search by shortcode">
+    Continue typing the shortcode after `/` — for example, `/refund` — to filter the list down to matching responses.
+  </Step>
+  <Step title="Select and insert">
+    Highlight the response you want using your keyboard arrow keys or by clicking it, then press **Enter**. The full message content replaces your shortcode text in the editor.
+  </Step>
+  <Step title="Review and send">
+    Review the inserted text, make any personalisation edits, then click **Send**.
+  </Step>
+</Steps>
+
+<Tip>
+You don't need to know the exact shortcode. Typing `/` alone shows all available canned responses. Scroll through the list or start typing any keyword that appears in the shortcode to narrow it down.
+</Tip>
+
+## Editing a Canned Response
+
+<Steps>
+  <Step title="Open Canned Response Settings">
+    Go to **Settings → Canned Responses**.
+  </Step>
+  <Step title="Find the response to edit">
+    Locate the canned response in the list. Use the search bar at the top if your library is large.
+  </Step>
+  <Step title="Click the edit icon">
+    Click the **edit (pencil) icon** next to the response. The edit modal opens with the existing shortcode and content pre-filled.
+  </Step>
+  <Step title="Make your changes">
+    Update the shortcode, the content, or both, then click **Submit** to save. Click **Cancel** to discard your changes.
+  </Step>
+</Steps>
+
+## Deleting a Canned Response
+
+<Steps>
+  <Step title="Open Canned Response Settings">
+    Go to **Settings → Canned Responses**.
+  </Step>
+  <Step title="Click the delete icon">
+    Click the **delete (trash) icon** next to the response you want to remove. A confirmation modal appears.
+  </Step>
+  <Step title="Confirm deletion">
+    Click **Yes, delete** to permanently remove the canned response. This action cannot be undone.
+  </Step>
+</Steps>
+
+<Warning>
+Deleting a canned response removes it from the library immediately. Agents will no longer be able to retrieve it using its shortcode.
+</Warning>
+
+## Using Template Variables in Canned Responses
+
+Template variables let you embed dynamic values — like a customer's name or the current date — directly into canned response content. When an agent inserts the canned response, Chatwoot fills in the variables automatically based on the context of the conversation.
+
+Common template variables include:
+
+| Variable | Inserts |
+|---|---|
+| `{{contact.name}}` | The contact's full name |
+| `{{contact.email}}` | The contact's email address |
+| `{{agent.name}}` | The assigned agent's name |
+| `{{conversation.id}}` | The unique conversation ID |
+
+To use a variable, include it in the **Content** field when creating or editing a canned response. For example:
+
+```
+Hi {{contact.name}}, thanks for reaching out! My name is {{agent.name}} and I'll be happy to help you today.
+```
+
+When an agent inserts this response, `{{contact.name}}` and `{{agent.name}}` are replaced with the actual values from the conversation.
+
+<Info>
+For the full list of supported template variables and advanced usage, see the [Canned Responses settings](/settings/inboxes).
+</Info>

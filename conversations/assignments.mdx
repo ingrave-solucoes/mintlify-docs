@@ -1,0 +1,110 @@
+---
+title: 'Assign Conversations to Agents and Teams'
+sidebarTitle: 'Assignments'
+description: 'Manually assign conversations to agents or teams, enable round-robin auto-assignment, and transfer ownership between agents in Chatwoot.'
+---
+
+Chatwoot gives you full control over who handles each conversation. You can manually route a conversation to a specific agent or team, let the round-robin system distribute incoming messages automatically, or transfer a conversation to a different agent mid-stream. Getting assignments right means faster responses and a more organised support queue.
+
+## Manually Assigning an Agent
+
+Assign a conversation to the agent best suited to handle it directly from the conversation details panel.
+
+<Steps>
+  <Step title="Open the conversation">
+    Click on the conversation in your inbox to open it.
+  </Step>
+  <Step title="Locate the Assigned Agent field">
+    In the right-hand **Conversation Details** sidebar, find the **Assigned Agent** dropdown.
+  </Step>
+  <Step title="Select an agent">
+    Click the dropdown and choose the agent you want to assign. Only agents who have access to the inbox where the conversation was created — and all administrators — appear in this list.
+  </Step>
+</Steps>
+
+<Note>
+You can reassign a conversation to a different agent at any time by repeating these steps and selecting a new name from the dropdown.
+</Note>
+
+## Assigning a Conversation to a Team
+
+Teams let you route conversations to a group of agents who share a responsibility area, such as Billing, Technical Support, or Sales.
+
+<Steps>
+  <Step title="Open the conversation">
+    Click on the conversation you want to assign.
+  </Step>
+  <Step title="Locate the Assigned Team field">
+    In the right-hand sidebar under **Conversation Actions**, find the **Assigned Team** dropdown.
+  </Step>
+  <Step title="Select a team">
+    Choose the appropriate team from the list. All agents in that team receive a notification about the assignment.
+  </Step>
+</Steps>
+
+<Tip>
+Assigning a team first and then an agent within that team is a good practice — it ensures the conversation appears in the correct team queue even if the specific agent is unavailable.
+</Tip>
+
+## Round-Robin Auto-Assignment
+
+Chatwoot includes a built-in round-robin system that distributes incoming conversations equally among online agents. This removes the need to manually assign every conversation and prevents any single agent from being overloaded.
+
+**How it works:**
+
+- When a new conversation arrives, Chatwoot checks which agents with inbox access are currently **online**.
+- It then assigns the conversation to the next agent in rotation, distributing the load evenly.
+- If **all agents are offline**, the conversation remains **unassigned** until an agent comes online or a manual assignment is made.
+
+### Enabling Round-Robin for an Inbox
+
+Round-robin assignment is enabled by default for new inboxes. To verify or change the setting:
+
+<Steps>
+  <Step title="Go to Inbox Settings">
+    Navigate to **Settings → Inboxes** and click the **Settings** link for the inbox you want to configure.
+  </Step>
+  <Step title="Scroll to the Round-Robin section">
+    Scroll down until you see the **Round-Robin** assignment toggle.
+  </Step>
+  <Step title="Enable the setting">
+    Set the toggle to **Enabled** and click **Update** to save your changes.
+  </Step>
+</Steps>
+
+<Info>
+Round-robin assignment only considers agents who are marked as **online** at the time the conversation comes in. Agents set to **Busy** or **Offline** are skipped in the rotation.
+</Info>
+
+## Transferring a Conversation to Another Agent
+
+If a conversation needs to be handed off — for example, when an agent is going offline or an escalation is required — transfer it by updating the assigned agent.
+
+<Steps>
+  <Step title="Open the conversation">
+    Navigate to the conversation you want to transfer.
+  </Step>
+  <Step title="Open the Assigned Agent dropdown">
+    In the right-hand sidebar, click the **Assigned Agent** dropdown.
+  </Step>
+  <Step title="Select the new agent">
+    Choose the agent you are transferring the conversation to. The entire conversation history, including all messages, notes, and labels, remains intact and is immediately visible to the new assignee.
+  </Step>
+</Steps>
+
+<Note>
+The outgoing agent's messages and private notes remain part of the conversation thread, giving the new agent full context without any handover gaps.
+</Note>
+
+## Setting Up Agents and Teams
+
+Before you can assign conversations, make sure your agents and teams are configured in Chatwoot.
+
+<CardGroup cols={2}>
+  <Card title="Add Agents" icon="user-plus" href="/settings/agents-teams">
+    Invite team members to your Chatwoot account and set their roles as Agent or Administrator.
+  </Card>
+  <Card title="Create Teams" icon="users" href="/settings/agents-teams">
+    Group agents into teams based on responsibilities and enable auto-assignment per team.
+  </Card>
+</CardGroup>

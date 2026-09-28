@@ -1,23 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "name": "Chatwoot",
+  "projectType": "saas",
+  "projectName": "Chatwoot",
+  "projectDescription": "Chatwoot is an open-source customer engagement platform that unifies conversations from live chat, email, social media, and messaging apps into a single collaborative inbox.",
   "theme": "almond",
-  "colors": {
-    "primary": "#2584f4",
-    "light": "#8abcfc",
-    "dark": "#040404"
-  },
-  "logo": {
-    "light": "https://media.brand.dev/1630c892-69b5-4bab-a5a1-d66a7bbf7385.svg",
-    "dark": "https://media.brand.dev/1630c892-69b5-4bab-a5a1-d66a7bbf7385.svg"
-  },
-  "favicon": "https://media.brand.dev/cc720905-b4a9-492f-b2c5-a37a8778f400.png",
-  "navbar": {
-    "primary": {
-      "type": "github",
-      "href": "https://github.com/chatwoot/chatwoot"
-    }
-  },
+  "primaryColor": "#2584f4",
+  "lightColor": "#8abcfc",
+  "darkColor": "#040404",
   "navigation": {
     "tabs": [
       {
@@ -103,5 +91,31 @@
         ]
       }
     ]
-  }
+  },
+  "keyFeatures": [
+    "Multi-channel inbox (live chat, WhatsApp, email, Facebook, Instagram, Twitter, Telegram, SMS, Line)",
+    "Unified agent dashboard for all conversations",
+    "Automation rules with event/condition/action flows",
+    "Outbound campaigns (one-off and ongoing)",
+    "Contact management with bulk import",
+    "CSAT (Customer Satisfaction) surveys and reports",
+    "Canned responses for faster replies",
+    "Conversation labels, assignments, and priority",
+    "Private notes and agent @mentions",
+    "Help Center / Knowledge Base",
+    "AI-assisted responses",
+    "Webhooks and API channel integration",
+    "Mobile apps for Android and iOS",
+    "Round-robin conversation routing",
+    "Slack, Dialogflow, Google Translate, and Dyte integrations"
+  ],
+  "publicApiSurface": [
+    "REST API (https://www.chatwoot.com/developers/api/)",
+    "Webhooks: message_created, conversation_created, conversation_updated, conversation_resolved",
+    "Webhook payload: event, id, content, message_type, sender, contact, conversation, account",
+    "API Channel: create-channel endpoint",
+    "Agent Bots API",
+    "Interactive Messages API",
+    "WebSocket events for real-time updates"
+  ]
 }

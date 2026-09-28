@@ -1,0 +1,129 @@
+---
+title: 'Configure Webhooks for Real-Time Event Notifications'
+sidebarTitle: 'Webhooks'
+description: 'Add webhook URLs, subscribe to Chatwoot events, and receive real-time POST payloads whenever conversations, messages, or contacts change.'
+---
+
+Webhooks give external applications instant visibility into activity inside your Chatwoot account. Whenever a subscribed event occurs — a new message arrives, a conversation is created, a contact is updated — Chatwoot sends an HTTP POST request to the URL you specify, with a JSON body describing the event. You can configure multiple webhooks per account, each listening to a different set of events.
+
+---
+
+## Add a webhook
+
+<Steps>
+  <Step title="Open the Webhooks settings">
+    Go to **Settings → Integrations → Webhooks** and click **Configure**. You will see a list of any webhooks already registered on your account.
+  </Step>
+  <Step title="Create a new webhook">
+    Click **Add new webhook** in the top-right corner. A modal dialog appears.
+  </Step>
+  <Step title="Enter the endpoint URL">
+    Paste the full HTTPS URL of the server endpoint that should receive events (e.g. `https://your-app.example.com/chatwoot/events`). Chatwoot sends all POST requests to this address.
+  </Step>
+  <Step title="Subscribe to events">
+    Check the boxes next to each event type you want to receive. Subscribing only to relevant events reduces noise and keeps your integration efficient.
+
+    | Event | Triggered when… |
+    |---|---|
+    | **Message Created** | A new message is sent or received in any conversation |
+    | **Conversation Created** | A new conversation is opened |
+    | **Conversation Status Changed** | A conversation moves between open, pending, resolved, or snoozed |
+    | **Conversation Updated** | Metadata on a conversation changes (assignee, labels, etc.) |
+    | **Contact Created** | A new contact record is created |
+    | **Contact Updated** | An existing contact record is modified |
+  </Step>
+  <Step title="Save the webhook">
+    Click **Create** (or **Save**). The webhook appears in your list and begins receiving events immediately.
+  </Step>
+</Steps>
+
+<Tip>
+  Use a service like [Webhook.site](https://webhook.site) or [RequestBin](https://pipedream.com/requestbin) to capture and inspect payloads during development before pointing Chatwoot at your production endpoint.
+</Tip>
+
+---
+
+## Webhook payload format
+
+Chatwoot delivers events as JSON in the request body using `Content-Type: application/json`. The structure varies slightly by event type, but every payload shares a common set of top-level fields.
+
+Below is a full example for the `message_created` event:
+
+```json
+{
+  "event": "message_created",
+  "id": "1",
+  "content": "Hi",
+  "created_at": "2020-03-03 13:05:57 UTC",
+  "message_type": "incoming",
+  "content_type": "enum",
+  "content_attributes": {},
+  "source_id": "",
+  "sender": {
+    "id": "1",
+    "name": "Agent",
+    "email": "agent@example.com"
+  },
+  "contact": {
+    "id": "1",
+    "name": "contact-name"
+  },
+  "conversation": {
+    "display_id": "1",
+    "additional_attributes": {
+      "browser": {
+        "device_name": "Macbook",
+        "browser_name": "Chrome",
+        "platform_name": "Macintosh",
+        "browser_version": "80.0.3987.122",
+        "platform_version": "10.15.2"
+      },
+      "referer": "http://www.chatwoot.com",
+      "initiated_at": "Tue Mar 03 2020 18:37:38 GMT-0700 (Mountain Standard Time)"
+    }
+  },
+  "account": {
+    "id": "1",
+    "name": "Chatwoot"
+  }
+}
+```
+
+### Key payload fields
+
+| Field | Type | Description |
+|---|---|---|
+| `event` | string | The name of the event that fired (e.g. `message_created`) |
+| `id` | string | The ID of the primary resource (message, conversation, contact) |
+| `content` | string | The text body of the message, if applicable |
+| `message_type` | string | `incoming` (from customer), `outgoing` (from agent), or `template` |
+| `content_type` | string | `text`, `input_select`, `cards`, or `form` |
+| `sender` | object | Agent details: `id`, `name`, `email` |
+| `contact` | object | Customer details: `id`, `name` |
+| `conversation` | object | Conversation details including `display_id` and browser/session attributes |
+| `account` | object | Account details: `id`, `name` |
+
+<Info>
+  The `content_type` field is `enum` when the message is one of the interactive template types (`input_select`, `cards`, `form`). The `message_type` is set to `template` in those cases.
+</Info>
+
+---
+
+## Edit or delete a webhook
+
+On the **Webhooks** list page, each registered webhook has:
+
+- **Edit** — Update the endpoint URL or change your event subscriptions.
+- **Delete** — Permanently remove the webhook. Chatwoot stops sending events to that URL immediately.
+
+---
+
+## Testing your webhook
+
+After saving a webhook, send yourself a test event by triggering the relevant action in Chatwoot — for example, send a message in a conversation to fire `message_created`. Check your endpoint's logs or use a request inspection tool to verify the payload arrived with the expected structure.
+
+<Note>
+  Chatwoot does not currently provide a built-in **Send Test** button. The most reliable approach is to perform the actual action in your account and confirm delivery on your endpoint side.
+</Note>
+
+For the full catalogue of supported event types and their detailed schemas, see the [Webhook Events reference](/developers/webhook-events).

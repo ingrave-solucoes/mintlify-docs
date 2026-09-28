@@ -1,0 +1,134 @@
+---
+title: 'Set Up an Email Inbox in Chatwoot'
+sidebarTitle: 'Email'
+description: 'Create an email inbox, forward messages from Gmail or any provider, and configure IMAP and SMTP so your team handles all support emails inside Chatwoot.'
+---
+
+Chatwoot's email channel converts every inbound support email into a trackable conversation, exactly like a message from any other channel. Your team reads, assigns, and replies to emails directly in the Chatwoot dashboard — no separate email client needed. You can pull in emails through simple forwarding, or configure full IMAP/SMTP access for two-way synchronization with your existing mailbox.
+
+## Create an Email Inbox
+
+<Steps>
+  <Step title="Open the Add Inbox wizard">
+    Go to **Settings → Inboxes → Add Inbox** and click the **Email** icon.
+  </Step>
+  <Step title="Enter your channel details">
+    Provide a **Channel Name** (the internal display name for this inbox) and your **support email address** — this is the address your customers write to. Click **Create Email Channel**.
+  </Step>
+  <Step title="Add agents">
+    Assign agents to the inbox. Only agents assigned here can see and respond to conversations in this inbox.
+  </Step>
+  <Step title="Configure how emails arrive">
+    Go to **Settings → Inboxes → (your inbox) → Configuration** tab and choose your delivery method: **email forwarding** or **IMAP**.
+  </Step>
+</Steps>
+
+---
+
+## Option 1: Forward Emails to Chatwoot
+
+Email forwarding is the simplest setup. Chatwoot assigns each inbox a unique forwarding address. You configure your existing mailbox to forward incoming messages to that address, and they appear as conversations in Chatwoot automatically.
+
+<Steps>
+  <Step title="Copy your Chatwoot forwarding address">
+    Open **Settings → Inboxes → (your inbox) → Configuration** and copy the forwarding address shown in the **Forward to Email** section.
+  </Step>
+  <Step title="Set up forwarding in your email provider">
+    Add the copied address as a forwarding destination in your email provider's settings:
+    - **Gmail**: Go to **Settings → See all settings → Forwarding and POP/IMAP → Add a forwarding address**.
+    - **Other providers**: Consult your provider's documentation for adding a forwarding rule.
+  </Step>
+  <Step title="Verify the connection">
+    Send a test email to your support address. The message should appear as a new conversation in your Chatwoot email inbox within moments.
+  </Step>
+</Steps>
+
+<Tip>
+  Use email forwarding when you want the quickest possible setup and do not need Chatwoot to send replies directly from your support email address. Pair it with SMTP (below) to handle outbound replies too.
+</Tip>
+
+---
+
+## Option 2: Configure IMAP
+
+IMAP lets Chatwoot connect directly to your mailbox and pull in messages at regular intervals. This works well when forwarding is not available or when you want Chatwoot to read from an existing shared mailbox.
+
+<Steps>
+  <Step title="Open the Configuration tab">
+    Go to **Settings → Inboxes → (your inbox) → Configuration**.
+  </Step>
+  <Step title="Enable IMAP">
+    Tick the **Enable IMAP configuration for this inbox** checkbox. The IMAP fields expand below it.
+  </Step>
+  <Step title="Enter your IMAP credentials">
+    Fill in the following fields:
+
+    | Field | Description |
+    |---|---|
+    | Address | Your mail server's IMAP hostname (e.g., `imap.gmail.com`) |
+    | Port | The IMAP port — typically `993` for SSL |
+    | Email | The email address Chatwoot should read from |
+    | Password | The account password or an app-specific password |
+
+    <Note>
+      **Gmail users**: If your account has 2-Step Verification enabled, generate an **App Password** in your Google Account security settings and use it here instead of your regular password. If 2-Step Verification is off, enable **Less secure app access** in your Google Account settings.
+    </Note>
+  </Step>
+  <Step title="Save and test">
+    Click **Update IMAP Settings**. Send a test email to your support address and confirm it appears in the Chatwoot inbox.
+  </Step>
+</Steps>
+
+---
+
+## Option 3: Configure SMTP (Outbound Replies)
+
+SMTP allows Chatwoot to send replies directly from your support email address rather than from Chatwoot's default mailer. Configure SMTP alongside IMAP or email forwarding to complete the two-way email workflow.
+
+<Steps>
+  <Step title="Open the Configuration tab">
+    Go to **Settings → Inboxes → (your inbox) → Configuration**.
+  </Step>
+  <Step title="Enable SMTP">
+    Tick the **Enable SMTP configuration for this inbox** checkbox.
+  </Step>
+  <Step title="Enter your SMTP credentials">
+    Fill in all required fields:
+
+    | Field | Description |
+    |---|---|
+    | Address | Your mail server's SMTP hostname (e.g., `smtp.gmail.com`) |
+    | Port | SMTP port — typically `587` (TLS) or `465` (SSL) |
+    | Email | The address Chatwoot sends from |
+    | Password | The account password or app-specific password |
+    | Domain | Your sending domain (e.g., `acme.com`) |
+  </Step>
+  <Step title="Save and verify delivery">
+    Click **Update SMTP Settings**. Open an existing email conversation in Chatwoot, type a reply, and click **Send**. Confirm the recipient receives the email in their inbox.
+  </Step>
+</Steps>
+
+---
+
+## Email-Only Support Workflow
+
+If email is your primary (or only) support channel, here is a recommended workflow to get the most out of Chatwoot's email inbox:
+
+<AccordionGroup>
+  <Accordion title="Route conversations with labels and teams">
+    Apply labels like `billing` or `technical` to email conversations and create teams to group agents by specialty. Use automation rules to assign labels or teams automatically based on subject-line keywords.
+  </Accordion>
+  <Accordion title="Use canned responses for common questions">
+    Create canned responses in **Settings → Canned Responses** and insert them with a `/` shortcut while composing replies. This cuts down response time for repetitive inquiries.
+  </Accordion>
+  <Accordion title="Enable CSAT surveys">
+    Turn on **CSAT** in the inbox settings to send an automatic satisfaction survey when a conversation is resolved. Review scores in **Reports → CSAT**.
+  </Accordion>
+  <Accordion title="Set business hours and an out-of-office message">
+    Configure **Business Hours** on the inbox so customers receive an automatic away message when they email outside your working hours.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  Chatwoot's email channel does not replace a full-featured email client for internal team communication. It is purpose-built for customer-facing support conversations.
+</Note>

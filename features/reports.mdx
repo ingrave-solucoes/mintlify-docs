@@ -1,0 +1,125 @@
+---
+title: 'Measure Support Performance with Chatwoot Reports'
+sidebarTitle: 'Reports'
+description: 'Track key support metrics like response time, resolution time, and message volume across agents, inboxes, teams, and labels in Chatwoot.'
+---
+
+Chatwoot Reports give you visibility into how your support team is performing across every dimension of your operation. From a real-time operational overview to historical trend analysis by agent, inbox, team, or label, the reports section helps you identify bottlenecks, recognise high performers, and make data-driven decisions to improve customer experience.
+
+## Accessing Reports
+
+Click the **Reports** icon in the left-hand sidebar of your Chatwoot dashboard. A sub-menu lists all available report types. Click any report to open it.
+
+## Available Report Types
+
+<CardGroup cols={2}>
+  <Card title="Overview" icon="gauge-high">
+    A real-time snapshot of your account — open conversations, agent availability, and conversation traffic patterns right now.
+  </Card>
+  <Card title="Conversations" icon="comments">
+    Historical metrics for all conversations on your account, including volume, response times, and resolution counts.
+  </Card>
+  <Card title="Agents" icon="users">
+    Per-agent breakdown of message volume, first response time, resolution time, and resolution count.
+  </Card>
+  <Card title="Teams" icon="people-group">
+    Same metrics as the Agents report, but grouped by team — useful for comparing team performance.
+  </Card>
+  <Card title="Inboxes" icon="inbox">
+    Per-inbox breakdown showing which channels receive the most traffic and how quickly they are handled.
+  </Card>
+  <Card title="Labels" icon="tag">
+    Conversation metrics grouped by label, helping you analyse volume and performance for specific issue types or customer segments.
+  </Card>
+  <Card title="CSAT" icon="star">
+    Customer satisfaction survey results, including satisfaction score, response rate, and individual responses. See the [CSAT guide](/features/csat) for details.
+  </Card>
+</CardGroup>
+
+## Overview Report
+
+The Overview report is a live dashboard — it updates in real time and does not require you to set a date range.
+
+### Open Conversations
+
+This section shows three conversation counts at a glance:
+
+| Status | Description |
+|---|---|
+| **Open** | Conversations that are actively ongoing. |
+| **Unattended** | Open conversations where no agent has responded. |
+| **Unassigned** | Open conversations not yet assigned to any agent. |
+
+### Agent Status
+
+See how many agents are currently **Online**, **Busy**, or **Offline** so you can assess your team's real-time capacity.
+
+### Conversation Traffic Heatmap
+
+A heatmap showing the busiest hours of the day over the past 7 days. Each cell represents the number of conversations received during that hour. Hover over a cell to see the exact count.
+
+### Conversations by Agent
+
+A live table showing how many open conversations each agent is currently handling, letting you spot overloaded agents and redistribute workload as needed.
+
+## Key Metrics Explained
+
+The Conversations, Agents, Teams, Inboxes, and Labels reports all use the same set of metrics, displayed as time-series graphs.
+
+<AccordionGroup>
+  <Accordion title="Conversations">
+    Total number of conversations received in the selected period. Hover over any point on the graph to see the exact count for that day.
+  </Accordion>
+  <Accordion title="First Response Time">
+    The average time between when a conversation was opened and when an agent sent the first reply. Lower is better — this metric reveals how quickly your team acknowledges customers.
+  </Accordion>
+  <Accordion title="Customer Waiting Time">
+    The average time a customer spent waiting for any agent response (not just the first one). Useful for identifying conversations where customers waited too long between replies.
+  </Accordion>
+  <Accordion title="Resolution Time">
+    The average time from conversation creation to resolution. Hover over a point to see the average and the number of conversations used in the calculation.
+  </Accordion>
+  <Accordion title="Resolution Count">
+    The number of conversations that were resolved on each day in the selected period.
+  </Accordion>
+  <Accordion title="Messages Received">
+    The total number of inbound messages received during the selected period.
+  </Accordion>
+  <Accordion title="Messages Sent">
+    The total number of outbound messages sent by agents during the selected period.
+  </Accordion>
+</AccordionGroup>
+
+### Understanding Trends
+
+Each metric graph includes a **Trend** indicator showing the percentage change compared to the previous equivalent period. A positive trend means performance improved (or volume increased); a negative trend means it declined.
+
+The formula Chatwoot uses is:
+
+```
+trend = ((current period value − previous period value) / previous period value) × 100
+```
+
+## Filtering Reports
+
+All historical reports share the same filter controls.
+
+### Duration
+
+Use the **Duration** dropdown to select a date range. The default is the last 7 days. When you change the duration, the graphs and trend calculations update automatically.
+
+### Grouping Data
+
+After selecting a duration, choose how to group the data — by **day**, **week**, or **month** — depending on the granularity you need. Longer date ranges automatically enable weekly or monthly grouping options.
+
+### Filtering by Agent (CSAT Report)
+
+In the CSAT report, you can additionally filter results by one or more specific agents using the **Agents** dropdown to compare individual agent satisfaction scores.
+
+## Adjusting for Business Hours
+
+Toggle the **Business Hours** switch in the top-right corner of any historical report to recalculate all metrics using only the hours your team is available. This removes off-hours waiting time from averages like First Response Time and Resolution Time, giving you a more accurate picture of in-hours performance.
+
+<Tip>
+  Configure your business hours in **Settings → Inboxes → [Inbox] → Business Hours** before enabling this toggle so Chatwoot knows which hours to include.
+</Tip>
