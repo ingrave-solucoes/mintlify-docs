@@ -1,7 +1,7 @@
 ---
-title: 'Speed Up Replies with Canned Responses'
+title: 'Speed Up Replies with Canned Responses in Chatwoot'
 sidebarTitle: 'Canned Responses'
-description: 'Create, manage, and use canned responses in Chatwoot to answer common questions instantly and cut down your average reply time.'
+description: "Create, manage, and use canned responses in Chatwoot to answer common questions instantly and cut down your team's average reply time."
 ---
 
 Canned responses are pre-written reply templates that any agent can insert into a conversation with a single keystroke. Instead of retyping the same answer to a frequently asked question, you save it once as a canned response and retrieve it by typing a short shortcode. Every agent in your account shares the same library of canned responses, so your team's best answers are always available to everyone.
@@ -96,25 +96,30 @@ Deleting a canned response removes it from the library immediately. Agents will 
 
 ## Using Template Variables in Canned Responses
 
-Template variables let you embed dynamic values — like a customer's name or the current date — directly into canned response content. When an agent inserts the canned response, Chatwoot fills in the variables automatically based on the context of the conversation.
+Template variables let you embed dynamic values — like a customer's name or your own name — directly into canned response content. When an agent inserts the canned response, Chatwoot fills in the variables automatically based on the context of the conversation.
 
-Common template variables include:
+To insert a variable while composing a canned response, type `{{` in the **Content** field and select from the list that appears. All supported variables are shown below.
 
 | Variable | Inserts |
 |---|---|
 | `{{contact.name}}` | The contact's full name |
-| `{{contact.email}}` | The contact's email address |
-| `{{agent.name}}` | The assigned agent's name |
+| `{{contact.first_name}}` | The contact's first name |
+| `{{contact.last_name}}` | The contact's last name |
+| `{{contact.phone_number}}` | The contact's phone number |
+| `{{agent.name}}` | The assigned agent's full name |
+| `{{agent.first_name}}` | The assigned agent's first name |
+| `{{agent.last_name}}` | The assigned agent's last name |
+| `{{agent.phone_number}}` | The assigned agent's phone number |
 | `{{conversation.id}}` | The unique conversation ID |
 
 To use a variable, include it in the **Content** field when creating or editing a canned response. For example:
 
-```
-Hi {{contact.name}}, thanks for reaching out! My name is {{agent.name}} and I'll be happy to help you today.
+```text
+Hi {{contact.first_name}}, thanks for reaching out! My name is {{agent.name}} and I'll be happy to help you today.
 ```
 
-When an agent inserts this response, `{{contact.name}}` and `{{agent.name}}` are replaced with the actual values from the conversation.
+When an agent inserts this response, `{{contact.first_name}}` and `{{agent.name}}` are replaced with the actual values from the conversation.
 
-<Info>
-For the full list of supported template variables and advanced usage, see the [Canned Responses settings](/settings/inboxes).
-</Info>
+<Tip>
+If a variable's value is missing for a contact, Chatwoot will warn you before sending. You can also add fallback text using the `||` operator — for example, `{{contact.first_name || 'there'}}` outputs "there" if the contact has no first name on record.
+</Tip>

@@ -1,7 +1,7 @@
 ---
-title: 'Chatwoot REST API: Authentication and Usage Guide'
+title: 'Chatwoot REST API: Complete Authentication and Usage Guide'
 sidebarTitle: 'API Overview'
-description: 'Learn how to authenticate with the Chatwoot REST API, pass your access token, handle pagination, and interpret error responses.'
+description: 'Learn how to authenticate with the Chatwoot REST API, pass your access token, handle rate limits, pagination, and error responses.'
 ---
 
 The Chatwoot REST API gives you programmatic access to every resource in your account — conversations, contacts, messages, inboxes, agents, and more. Whether you are building a custom integration, automating support workflows, or extending the Chatwoot dashboard, you interact with the same HTTP-based API that the Chatwoot web application uses itself.
@@ -10,7 +10,7 @@ The Chatwoot REST API gives you programmatic access to every resource in your ac
 
 All API endpoints are relative to the following base URL:
 
-```
+```text
 https://app.chatwoot.com/api/v1
 ```
 
@@ -45,7 +45,7 @@ You can pass your access token in one of two ways on every request.
 
 Append `api_access_token` as a query string parameter:
 
-```
+```text
 GET https://app.chatwoot.com/api/v1/profile?api_access_token=YOUR_TOKEN
 ```
 
@@ -53,7 +53,7 @@ GET https://app.chatwoot.com/api/v1/profile?api_access_token=YOUR_TOKEN
 
 Pass the token in the `api_access_token` header:
 
-```
+```text
 api_access_token: YOUR_TOKEN
 ```
 
@@ -112,7 +112,7 @@ When you exceed the limit, the API returns `429 Too Many Requests`. Implement ex
 
 List endpoints return paginated results. Use the `page` query parameter to navigate through pages. Each page returns up to **25** records by default.
 
-```
+```text
 GET /api/v1/accounts/{account_id}/conversations?page=2
 ```
 

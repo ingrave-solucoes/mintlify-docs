@@ -1,7 +1,7 @@
 ---
-title: 'Build Agent Bots to Automate Conversations'
+title: 'Build and Connect Agent Bots to Automate Conversations'
 sidebarTitle: 'Agent Bots'
-description: 'Create agent bots in Chatwoot to automate triage, send replies, handle handoffs to human agents, and integrate with AI services.'
+description: 'Create agent bots in Chatwoot to automate triage, send interactive replies, hand off to human agents, and integrate with AI or NLP services.'
 ---
 
 Agent bots let you connect your own automated logic directly to Chatwoot inboxes. Once you attach a bot to an inbox, Chatwoot assigns all new conversations a `pending` status and forwards every conversation event to your bot's webhook URL. Your bot reads the event, decides how to respond, and calls the Chatwoot API to post a reply, update conversation metadata, or hand the conversation off to a human agent — all without any manual intervention. This model makes Chatwoot a powerful front-end for AI assistants, intent-detection engines (Dialogflow, Rasa, Amazon Lex), or custom rule-based bots.
@@ -128,7 +128,7 @@ app.listen(8000, () => console.log('Bot listening on port 8000'));
 
 Use the Create Message API to post your bot's reply back into the conversation:
 
-```
+```text
 POST /api/v1/accounts/{account_id}/conversations/{conversation_id}/messages
 ```
 
@@ -150,8 +150,8 @@ To send an interactive message (option picker, card, form), set `content_type` a
 
 When your bot determines a conversation needs a human, call the Conversation Update API to set the status to `open`:
 
-```
-PATCH /api/v1/accounts/{account_id}/conversations
+```text
+PATCH /api/v1/accounts/{account_id}/conversations/{conversation_id}
 ```
 
 ```bash
@@ -176,7 +176,7 @@ Agents can return a conversation to the bot queue at any time by setting the con
 
 ## Architecture Overview
 
-```
+```text
 Customer Widget
       │
       ▼

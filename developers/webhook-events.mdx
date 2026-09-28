@@ -1,7 +1,7 @@
 ---
-title: 'Complete Reference of Chatwoot Webhook Events'
+title: 'Chatwoot Webhook Events: Full Payload Reference Guide'
 sidebarTitle: 'Webhook Events'
-description: 'Full payload schemas for every Chatwoot webhook event type, including message, conversation, contact, and widget events.'
+description: 'Complete payload schemas for every Chatwoot webhook event type: message, conversation, contact, and web widget events with field-level docs.'
 ---
 
 Chatwoot publishes a rich set of webhook events whenever something changes in your account. Each event carries a structured JSON payload built around one of a handful of core object types. This reference describes every supported event, its trigger condition, and the exact fields you can expect in the payload. To learn how to register a webhook endpoint, see [Set Up Webhooks](/developers/webhooks).
@@ -437,6 +437,62 @@ Fires when a contact opens the Chatwoot live-chat web widget on your site.
 
 ---
 
+### `contact_created`
+
+Fires when a new contact record is created in the account — for example, when a new visitor starts a conversation or an agent manually creates a contact.
+
+<ResponseField name="event" type="string">
+  Always `"contact_created"`.
+</ResponseField>
+
+The remaining fields follow the [Contact Object](#contact-object) schema.
+
+```json
+{
+  "event": "contact_created",
+  "id": 42,
+  "name": "Jane Doe",
+  "avatar": "https://example.com/avatar.png",
+  "type": "contact",
+  "account": { "id": 1, "name": "Acme Support" }
+}
+```
+
+---
+
+### `contact_updated`
+
+Fires when an existing contact record is modified — for example, when an agent updates the contact's name, email, or phone number.
+
+<ResponseField name="event" type="string">
+  Always `"contact_updated"`.
+</ResponseField>
+
+<ResponseField name="changed_attributes" type="array">
+  An array of objects describing which attributes changed. Each entry contains the attribute name as a key, with `current_value` and `previous_value` sub-fields.
+</ResponseField>
+
+```json
+{
+  "event": "contact_updated",
+  "id": 42,
+  "name": "Jane Doe",
+  "avatar": "https://example.com/avatar.png",
+  "type": "contact",
+  "account": { "id": 1, "name": "Acme Support" },
+  "changed_attributes": [
+    {
+      "email": {
+        "current_value": "jane.new@example.com",
+        "previous_value": "jane@example.com"
+      }
+    }
+  ]
+}
+```
+
+---
+
 ## Quick Reference
 
 | Event | Primary Object | Key Use Case |
@@ -447,3 +503,5 @@ Fires when a contact opens the Chatwoot live-chat web widget on your site.
 | `conversation_updated` | Conversation | Track assignment changes |
 | `conversation_status_changed` | Conversation | Close linked tickets when resolved |
 | `webwidget_triggered` | Contact + Inbox | Personalise the widget greeting |
+| `contact_created` | Contact | Sync new contacts to your CRM |
+| `contact_updated` | Contact | Keep external records in sync |

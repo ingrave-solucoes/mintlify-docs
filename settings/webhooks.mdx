@@ -104,7 +104,7 @@ Below is a full example for the `message_created` event:
 | `account` | object | Account details: `id`, `name` |
 
 <Info>
-  The `content_type` field is `enum` when the message is one of the interactive template types (`input_select`, `cards`, `form`). The `message_type` is set to `template` in those cases.
+  The `content_type` field defaults to `text` for regular messages. When the message carries an interactive template (such as `input_select`, `cards`, or `form`), `content_type` is set to that type and `message_type` is set to `template`. The value `"enum"` shown in the raw payload example above is a documentation placeholder from the source and is not a real runtime value.
 </Info>
 
 ---

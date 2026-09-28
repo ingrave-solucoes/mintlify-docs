@@ -241,7 +241,7 @@ Chatwoot supports several deployment methods so you can choose the approach that
     3. Choose a Droplet size with at least **4 vCPUs and 8 GB RAM**.
     4. Select your preferred datacenter region.
     5. Add your SSH key for authentication, then click **Create**.
-    6. SSH into the new Droplet and follow the [Linux Script](#linux-script) instructions above.
+    6. SSH into the new Droplet and follow the **Linux Script** tab instructions on this page.
 
     Once the installer finishes, your instance is available at `http://<droplet-ip>:3000`, or at your domain if you configured DNS and SSL during setup.
 
@@ -249,7 +249,7 @@ Chatwoot supports several deployment methods so you can choose the approach that
 
     For a cloud-native deployment with horizontal scaling, use the [Chatwoot app on the DigitalOcean Marketplace](https://marketplace.digitalocean.com/apps/chatwoot). This deploys Chatwoot on a managed Kubernetes cluster and wires up a load balancer automatically.
 
-    After the app is deployed, configure your environment variables through the Kubernetes secret or your values YAML file and follow the [Kubernetes / Helm upgrade path](#kubernetes) for future updates.
+    After the app is deployed, configure your environment variables through the Kubernetes secret or your values YAML file and follow the **Kubernetes / Helm** tab upgrade path on this page for future updates.
 
   </Tab>
   <Tab title="Heroku">
@@ -295,7 +295,7 @@ Chatwoot supports several deployment methods so you can choose the approach that
 
     1. Launch an EC2 instance running **Ubuntu 20.04** with at least 4 vCPUs and 8 GB RAM.
     2. Open port 80 and 443 in your security group.
-    3. SSH into the instance and follow the [Linux Script](#linux-script) installer steps above.
+    3. SSH into the instance and follow the **Linux Script** tab installer steps on this page.
 
     For production workloads, consider using **Amazon RDS** for PostgreSQL and **Amazon ElastiCache** for Redis instead of running these services on the same EC2 instance. Configure the `DATABASE_URL` and `REDIS_URL` environment variables to point to your managed services.
 

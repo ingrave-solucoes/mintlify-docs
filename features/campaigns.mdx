@@ -1,5 +1,5 @@
 ---
-title: 'Send Proactive Campaigns to Your Customers'
+title: 'Send Proactive SMS and Live-Chat Campaigns in Chatwoot'
 sidebarTitle: 'Campaigns'
 description: 'Create one-off SMS campaigns or ongoing live-chat campaigns in Chatwoot to proactively engage customers with targeted messages at the right moment.'
 ---
@@ -93,15 +93,15 @@ When a visitor meets the time-on-page threshold, the chat widget opens automatic
 The **URL** field in ongoing campaigns supports wildcard patterns so you can target multiple pages with a single rule.
 
 <AccordionGroup>
-  <Accordion title="Match an exact URL">
+  <Accordion title="Match an exact URL (including query parameters)">
     Enter the full URL without a trailing slash: `https://example.com/pricing`
 
-    This matches only that exact path. Query parameters and hash fragments will **not** match unless explicitly included.
+    This matches the exact path as well as variants with a trailing slash or query/hash parameters — for example, `https://example.com/pricing/` and `https://example.com/pricing?ref=email` would both match. If you need to match only a very specific query string, include it explicitly in the URL pattern.
   </Accordion>
-  <Accordion title="Ignore query parameters and hash fragments">
+  <Accordion title="Match a path regardless of query parameters">
     Add a trailing slash: `https://example.com/pricing/`
 
-    This matches the path with or without query parameters or hash fragments.
+    This matches the path with or without query parameters or hash fragments — for example, `https://example.com/pricing`, `https://example.com/pricing/?ref=email`, and `https://example.com/pricing/#section` all match.
   </Accordion>
   <Accordion title="Match all sub-directories">
     Use an asterisk (`*`): `https://example.com/*`
